@@ -1,0 +1,24 @@
+{
+    "name": "mesd/filter-bundle",
+    "type": "symfony-bundle",
+    "description": "A Symfony2 bundle for filtering query builders",
+    "keywords": ["filtering"],
+    "homepage": "https://github.com/MESD",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Oliver Forral",
+            "email": "oforral@mesd.k12.or.us"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "php": ">=5.3.2"
+    },
+    "autoload": {
+        "psr-0": {
+            "Mesd\\FilterBundle": ""
+        }
+    },
+    "target-dir": "Mesd/FilterBundle"
+}
