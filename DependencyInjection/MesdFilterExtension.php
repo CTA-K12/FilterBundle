@@ -51,9 +51,6 @@ class MesdFilterExtension extends Extension
         $container->setParameter('mesd_filter.filter_class_placeholder', $container->getParameter('mesd_filter.filter_class'));
         $container->setParameter('mesd_filter.filter_category_class_placeholder', $container->getParameter('mesd_filter.filter_category_class'));
 
-        //Set the filters enabled on the user metadata listener to true
-        $userMetadataListener->addMethodCall('setFiltersEnabled', array(true));
-
         // Once the services definition are read, get your service and add a method call to setConfig()
         $serviceDefinition = $container->getDefinition( 'mesd_filter.filter_manager' );
         $serviceDefinition->addMethodCall( 'setBypassRoles', array( $config[ 'filter' ][ 'bypass_roles' ] ) );

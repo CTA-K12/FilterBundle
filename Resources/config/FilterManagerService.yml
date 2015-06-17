@@ -4,4 +4,4 @@ parameters:
 services:
     mesd_filter.filter_manager:
         class: %mesd_filter.filter_manager.class%
-        arguments: [@security.context, @doctrine, %mesd_filter.user_class%, %mesd_filter.role_class%, %mesd_filter.filter_class%]
+        arguments: [@security.context, @doctrine]

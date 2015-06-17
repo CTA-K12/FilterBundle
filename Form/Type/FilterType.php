@@ -2,7 +2,6 @@
 
 namespace Mesd\FilterBundle\Form\Type;
 
-use Mesd\UserBundle\Form\Transformer\SolventToJsonTransformer;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
@@ -21,7 +20,6 @@ class FilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $entityManager = $options['entityManager'];
-        $transformer = new SolventToJsonTransformer($entityManager);
         $builder
             ->add(
                 'filterCategory',
@@ -33,19 +31,8 @@ class FilterType extends AbstractType
                     'empty_value' => '',
                 )
             )
-            ->add('name')
+            ->add('description')
         ;
-        $builder->add(
-            $builder->create(
-                'solvent',
-                'hidden',
-                array(
-                    'attr' => array(
-                        'class' => 'filter-solvent-hidden',
-                    ),
-                )
-            )->addModelTransformer($transformer)
-        );
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)

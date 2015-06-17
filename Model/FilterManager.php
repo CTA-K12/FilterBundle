@@ -6,19 +6,13 @@ class FilterManager {
 
     private $securityContext;
     private $objectManager;
-    private $filterClass;
-    private $roleClass;
-    private $userClass;
     private $bypassRoles;
     private $config;
 
-    public function __construct($securityContext, $objectManager, $userClass, $roleClass, $filterClass)
+    public function __construct($securityContext, $objectManager)
     {
         $this->securityContext = $securityContext;
         $this->objectManager   = $objectManager->getManager();
-        $this->userClass       = $userClass;
-        $this->roleClass       = $roleClass;
-        $this->filterClass     = $filterClass;
     }
 
     public function applyFilters($queryBuilder, $filtersToApply)
