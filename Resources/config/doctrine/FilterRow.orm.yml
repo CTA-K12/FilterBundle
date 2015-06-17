@@ -1,6 +1,6 @@
 Mesd\FilterBundle\Entity\FilterRow:
     type: entity
-    table: mesd_filter_filter_row
+    table: mesd_filter_row
     repositoryClass: Mesd\FilterBundle\Repository\FilterRowRepository
 
     fields:

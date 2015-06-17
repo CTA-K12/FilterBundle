@@ -1,6 +1,6 @@
 Mesd\FilterBundle\Entity\FilterJoin:
     type: entity
-    table: mesd_filter_filter_join
+    table: mesd_filter_join
     repositoryClass: Mesd\FilterBundle\Repository\FilterJoinRepository
 
     fields:
