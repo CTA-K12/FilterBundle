@@ -8,7 +8,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 
-class MesdUserExtension extends Extension
+class MesdFilterExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {
