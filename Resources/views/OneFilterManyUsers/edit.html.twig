@@ -1,0 +1,15 @@
+{% extends "MesdFilterBundle::layout.html.twig" %}
+
+{% block mesd_filter_content %}
+    <h1>Editing users that have {{ entity }} filter</h1>
+
+    {{ form(edit_form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('MesdFilterBundle_onefiltermanyusers') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock mesd_filter_content %}

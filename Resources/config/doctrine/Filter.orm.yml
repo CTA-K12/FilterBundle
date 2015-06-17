@@ -1,0 +1,35 @@
+Mesd\FilterBundle\Entity\Filter:
+    type: entity
+    table: mesd_filter_filter
+    repositoryClass: Mesd\FilterBundle\Repository\FilterRepository
+
+    fields:
+        id:
+            id: true
+            type: integer
+            nullable: false
+            generator:
+                strategy: AUTO
+        description:
+            type: text
+            column: description
+            nullable: false
+
+    manyToMany:
+        filterRow:
+            targetEntity: FilterRow
+            inversedBy: filter
+            cascade: {  }
+            joinTable:
+                name: mesd_filter__row
+                joinColumns:
+                    filter_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    filter_row_id:
+                        referencedColumnName: id
+
+    manyToOne:
+        filterCategory:
+            targetEntity: FilterCategory
+            inversedBy: filter

@@ -1,0 +1,40 @@
+MesdFilterBundle_filter:
+    pattern: /
+    defaults: { _controller: MesdFilterBundle:Filter:index }
+    methods:  [GET]
+
+MesdFilterBundle_filter_create:
+    pattern: /create
+    defaults: { _controller: MesdFilterBundle:Filter:create }
+    methods:  [POST]
+
+MesdFilterBundle_filter_delete:
+    pattern: /{id}/delete
+    defaults: { _controller: MesdFilterBundle:Filter:delete }
+    methods:  [DELETE, POST]
+
+MesdFilterBundle_filter_edit:
+    pattern: /{id}/edit
+    defaults: { _controller: MesdFilterBundle:Filter:edit }
+    methods:  [GET]
+
+MesdFilterBundle_filter_new:
+    pattern: /new
+    defaults: { _controller: MesdFilterBundle:Filter:new }
+    methods:  [GET]
+
+MesdFilterBundle_filter_show:
+    pattern: /{id}/show
+    defaults: { _controller: MesdFilterBundle:Filter:show }
+    methods:  [GET]
+
+MesdFilterBundle_filter_solvent:
+    pattern: /solvent
+    defaults: { _controller: MesdFilterBundle:Filter:solvent }
+    methods:  [GET]
+
+MesdFilterBundle_filter_update:
+    pattern: /{id}/update
+    defaults: { _controller: MesdFilterBundle:Filter:update }
+    methods:  [POST, PUT]
+

@@ -1,0 +1,25 @@
+Mesd\FilterBundle\Entity\FilterEntity:
+    type: entity
+    table: mesd_filter_filter_entity
+    repositoryClass: Mesd\FilterBundle\Repository\FilterEntityRepository
+
+    fields:
+        id:
+            id: true
+            type: integer
+            nullable: false
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            column: name
+            nullable: false
+        databaseName:
+            type: string
+            column: database_name
+            nullable: false
+
+    manyToMany:
+        filterAssociation:
+            targetEntity: FilterAssociation
+            mappedBy: filterEntity

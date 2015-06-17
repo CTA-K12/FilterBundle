@@ -1,0 +1,7 @@
+parameters:
+    mesd_filter.role_filter.class: Mesd\FilterBundle\Model\RoleFilter
+
+services:
+    mesd_filter.role_filter:
+        class: %mesd_filter.role_filter.class%
+        arguments: [@doctrine, %mesd_filter.user_class%, %mesd_filter.role_class%, %mesd_filter.filter_class%]

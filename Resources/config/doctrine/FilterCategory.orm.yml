@@ -1,0 +1,20 @@
+Mesd\FilterBundle\Entity\FilterCategory:
+    type: entity
+    table: mesd_filter_filter_category
+    repositoryClass: Mesd\FilterBundle\Repository\FilterCategoryRepository
+
+    fields:
+        id:
+            id: true
+            type: integer
+            nullable: false
+            generator:
+                strategy: AUTO
+        name:
+            type: string
+            column: name
+            nullable: false
+        codeName:
+            type: string
+            column: code_name
+            nullable: false
