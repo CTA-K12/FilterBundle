@@ -1,40 +1,30 @@
-MesdFilterBundle_filter:
-    pattern: /
-    defaults: { _controller: MesdFilterBundle:Filter:index }
-    methods:  [GET]
+filter:
+    path:     /
+    defaults: { _controller: "MesdFilterBundle:Filter:index" }
 
-MesdFilterBundle_filter_create:
-    pattern: /create
-    defaults: { _controller: MesdFilterBundle:Filter:create }
-    methods:  [POST]
+filter_show:
+    path:     /{id}/show
+    defaults: { _controller: "MesdFilterBundle:Filter:show" }
 
-MesdFilterBundle_filter_delete:
-    pattern: /{id}/delete
-    defaults: { _controller: MesdFilterBundle:Filter:delete }
-    methods:  [DELETE, POST]
+filter_new:
+    path:     /new
+    defaults: { _controller: "MesdFilterBundle:Filter:new" }
 
-MesdFilterBundle_filter_edit:
-    pattern: /{id}/edit
-    defaults: { _controller: MesdFilterBundle:Filter:edit }
-    methods:  [GET]
+filter_create:
+    path:     /create
+    defaults: { _controller: "MesdFilterBundle:Filter:create" }
+    methods:  POST
 
-MesdFilterBundle_filter_new:
-    pattern: /new
-    defaults: { _controller: MesdFilterBundle:Filter:new }
-    methods:  [GET]
+filter_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MesdFilterBundle:Filter:edit" }
 
-MesdFilterBundle_filter_show:
-    pattern: /{id}/show
-    defaults: { _controller: MesdFilterBundle:Filter:show }
-    methods:  [GET]
-
-MesdFilterBundle_filter_solvent:
-    pattern: /solvent
-    defaults: { _controller: MesdFilterBundle:Filter:solvent }
-    methods:  [GET]
-
-MesdFilterBundle_filter_update:
-    pattern: /{id}/update
-    defaults: { _controller: MesdFilterBundle:Filter:update }
+filter_update:
+    path:     /{id}/update
+    defaults: { _controller: "MesdFilterBundle:Filter:update" }
     methods:  [POST, PUT]
 
+filter_delete:
+    path:     /{id}/delete
+    defaults: { _controller: "MesdFilterBundle:Filter:delete" }
+    methods:  [POST, DELETE]

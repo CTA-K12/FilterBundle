@@ -10,6 +10,10 @@ Mesd\FilterBundle\Entity\Filter:
             nullable: false
             generator:
                 strategy: AUTO
+        name:
+            type: string
+            column: name
+            nullable: false
         description:
             type: text
             column: description

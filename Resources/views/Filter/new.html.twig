@@ -1,17 +1,15 @@
-{% extends "MesdFilterBundle:Filter:layout.html.twig" %}
+{% extends '::base.html.twig' %}
 
-{% block mesd_filter_filter_content %}
-    <h1>New Filter</h1>
+{% block body -%}
+    <h1>Filter creation</h1>
 
-    {{ form_start(form) }}
-    {{ form_errors(form) }}
-    {{ form_label(form.description) }}
-    {{ form_widget(form.description, {'attr': {'class': 'form-control'}}) }}
-    {{ form_errors(form.description) }}
-    {{ form_label(form.filterCategory) }}
-    {{ form_widget(form.filterCategory, {'attr': {'class': 'form-control filter-role-dropdown'}}) }}
-    {{ form_errors(form.filterCategory) }}
-    {{ form_label(form.create) }}
-    {{ form_widget(form.create, {'attr': {'class': 'btn btn-primary'}}) }}
-    {{ form_end(form) }}
-{% endblock mesd_filter_filter_content %}
+    {{ form(form) }}
+
+        <ul class="record_actions">
+    <li>
+        <a href="{{ path('filter') }}">
+            Back to the list
+        </a>
+    </li>
+</ul>
+{% endblock %}

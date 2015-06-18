@@ -17,6 +17,11 @@ class Filter
     /**
      * @var string
      */
+    private $name;
+
+    /**
+     * @var string
+     */
     private $description;
 
     /**
@@ -45,6 +50,29 @@ class Filter
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set name
+     *
+     * @param string $name
+     * @return Filter
+     */
+    public function setName($name)
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    /**
+     * Get name
+     *
+     * @return string 
+     */
+    public function getName()
+    {
+        return $this->name;
     }
 
     /**

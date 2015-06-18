@@ -1,0 +1,4 @@
+mesd_filter_filter:
+    resource: "@MesdFilterBundle/Resources/config/routing/filter.yml"
+    prefix:   /filter
+

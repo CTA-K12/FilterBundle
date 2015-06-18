@@ -2,247 +2,185 @@
 
 namespace Mesd\FilterBundle\Controller;
 
-use Doctrine\ORM\Mapping\ClassMetadata;
-use Mesd\FilterBundle\Entity\Filter;
-use Mesd\FilterBundle\Form\Factory\FilterFormFactory;
-use Mesd\FilterBundle\Form\Type\FilterType;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Mesd\FilterBundle\Entity\Filter;
+use Mesd\FilterBundle\Form\FilterType;
+
+/**
+ * Filter controller.
+ *
+ */
 class FilterController extends Controller
 {
+
+    /**
+     * Lists all Filter entities.
+     *
+     */
     public function indexAction()
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterRepository = $entityManager->getRepository('MesdFilterBundle:Filter');
-        $filters = $filterRepository->findAll();
-        $filterManager = $this->get('mesd_filter.filter_manager');
-        $metadataFactory = $entityManager->getMetadataFactory();
-        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
+        $em = $this->getDoctrine()->getManager();
 
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.index'),
-            array(
-                'filters' => $filterArray,
-            )
-        );
-    }
+        $entities = $em->getRepository('MesdFilterBundle:Filter')->findAll();
 
-    public function newAction()
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
-        $filterCategoryClass = $this->container->getParameter('mesd_filter.filter_category_class');
-        $entity = new $filterClass();
-        $form = $this->createForm(
-            new FilterType($filterClass, $filterCategoryClass),
-            $entity,
-            array(
-                'action'        => $this->generateUrl('MesdFilterBundle_filter_create'),
-                'entityManager' => $entityManager,
-                'method'        => 'POST',
-            )
-        );
-        $form->add('create', 'submit', array(
-            'label' => 'Create',
+        return $this->render('MesdFilterBundle:Filter:index.html.twig', array(
+            'entities' => $entities,
         ));
-
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.new'),
-            array(
-                'form' => $form->createView(),
-            )
-        );
     }
-
-    public function solventAction(Request $request)
-    {
-        $filterCategoryId = $request->query->get('id');
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterCategoryClass = $this->container->getParameter('mesd_filter.filter_category_class');
-        $filterCategoryRepository = $entityManager->getRepository($filterCategoryClass);
-        $filterCategory = $filterCategoryRepository->findOneById($filterCategoryId);
-        $filterManager = $this->get('mesd_filter.filter_manager');
-        $config = $filterManager->getConfig();
-        $filterCategoryName = $filterCategory->getName();
-        $metadataFactory = $entityManager->getMetadataFactory();
-        $entityLists = array();
-        if (array_key_exists($filterCategoryName, $config)) {
-            $filterCategoryConfig = $config[$filterCategoryName];
-            $entityLists = $filterManager->getEntityLists($filterCategoryConfig['entities'], $metadataFactory);
-        } else {
-            $filterCategoryConfig = null;
-        }
-
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.solvent'),
-            array(
-                'filterCategoryConfig' => $filterCategoryConfig,
-                'entityLists'          => $entityLists,
-            )
-        );
-    }
-
+    /**
+     * Creates a new Filter entity.
+     *
+     */
     public function createAction(Request $request)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
-        $filterCategoryClass = $this->container->getParameter('mesd_filter.filter_category_class');
-        $entity = new $filterClass();
-        $form = $this->createForm(
-            new FilterType($filterClass, $filterCategoryClass),
-            $entity,
-            array(
-                'action'        => $this->generateUrl('MesdFilterBundle_filter_create'),
-                'entityManager' => $entityManager,
-                'method'        => 'POST',
-            )
-        );
-        $form->add('create', 'submit', array(
-            'label' => 'Create',
-        ));
-
+        $entity = new Filter();
+        $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($entity);
-            $entityManager->flush();
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($entity);
+            $em->flush();
 
-            return $this->redirect($this->generateUrl('MesdFilterBundle_filter_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('filter_show', array('id' => $entity->getId())));
         }
 
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.new'),
-            array(
-                'form' => $form->createView(),
-            )
-        );
+        return $this->render('MesdFilterBundle:Filter:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
     }
 
+    /**
+     * Creates a form to create a Filter entity.
+     *
+     * @param Filter $entity The entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createCreateForm(Filter $entity)
+    {
+        $form = $this->createForm(new FilterType(), $entity, array(
+            'action' => $this->generateUrl('filter_create'),
+            'method' => 'POST',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Create'));
+
+        return $form;
+    }
+
+    /**
+     * Displays a form to create a new Filter entity.
+     *
+     */
+    public function newAction()
+    {
+        $entity = new Filter();
+        $form   = $this->createCreateForm($entity);
+
+        return $this->render('MesdFilterBundle:Filter:new.html.twig', array(
+            'entity' => $entity,
+            'form'   => $form->createView(),
+        ));
+    }
+
+    /**
+     * Finds and displays a Filter entity.
+     *
+     */
     public function showAction($id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
-        $filterRepository = $entityManager->getRepository($filterClass);
-        $filters = $filterRepository->findById($id);
-        $filterManager = $this->get('mesd_filter.filter_manager');
-        $metadataFactory = $entityManager->getMetadataFactory();
-        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
+        $em = $this->getDoctrine()->getManager();
 
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.show'),
-            array(
-                'id'      => $id,
-                'filters' => $filterArray,
-            )
-        );
+        $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Filter entity.');
+        }
+
+        $deleteForm = $this->createDeleteForm($id);
+
+        return $this->render('MesdFilterBundle:Filter:show.html.twig', array(
+            'entity'      => $entity,
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
+    /**
+     * Displays a form to edit an existing Filter entity.
+     *
+     */
     public function editAction($id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
-        $filterRepository = $entityManager->getRepository($filterClass);
-        $filters = $filterRepository->findById($id);
-        $entity = $filterRepository->findOneById($id);
-        $filterCategoryClass = $this->container->getParameter('mesd_filter.filter_category_class');
-        $filterCategory = $entity->getFilterCategory();
-        $filterManager = $this->get('mesd_filter.filter_manager');
-        $metadataFactory = $entityManager->getMetadataFactory();
-        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
-        $config = $filterManager->getConfig();
-        $filterCategoryName = $filterCategory->getName();
-        $entityLists = array();
-        if (array_key_exists($filterCategoryName, $config)) {
-            $filterCategoryConfig = $config[$filterCategoryName];
-            $entityLists = $filterManager->getEntityLists($filterCategoryConfig['entities'], $metadataFactory);
-        } else {
-            $filterCategoryConfig = null;
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Filter entity.');
         }
-        $form = $this->createForm(
-            new FilterType($filterClass, $filterCategoryClass),
-            $entity,
-            array(
-                'action'        => $this->generateUrl('MesdFilterBundle_filter_update', array('id' => $entity->getId())),
-                'entityManager' => $entityManager,
-                'method'        => 'POST',
-            )
-        );
-        $form->add('update', 'submit', array(
-            'label' => 'Update',
-        ));
+
+        $editForm = $this->createEditForm($entity);
         $deleteForm = $this->createDeleteForm($id);
 
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.edit'),
-            array(
-                'filterCategoryConfig' => $filterCategoryConfig,
-                'filters'              => $filterArray,
-                'form'                 => $form->createView(),
-                'entityLists'          => $entityLists,
-                'delete_form'          => $deleteForm->createView(),
-            )
-        );
+        return $this->render('MesdFilterBundle:Filter:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
 
+    /**
+    * Creates a form to edit a Filter entity.
+    *
+    * @param Filter $entity The entity
+    *
+    * @return \Symfony\Component\Form\Form The form
+    */
+    private function createEditForm(Filter $entity)
+    {
+        $form = $this->createForm(new FilterType(), $entity, array(
+            'action' => $this->generateUrl('filter_update', array('id' => $entity->getId())),
+            'method' => 'PUT',
+        ));
+
+        $form->add('submit', 'submit', array('label' => 'Update'));
+
+        return $form;
+    }
+    /**
+     * Edits an existing Filter entity.
+     *
+     */
     public function updateAction(Request $request, $id)
     {
-        $entityManager = $this->getDoctrine()->getManager();
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
-        $filterRepository = $entityManager->getRepository($filterClass);
-        $filters = $filterRepository->findById($id);
-        $entity = $filterRepository->findOneById($id);
-        $filterCategoryClass = $this->container->getParameter('mesd_filter.filter_category_class');
-        $filterCategory = $entity->getFilterCategory();
-        $filterManager = $this->get('mesd_filter.filter_manager');
-        $metadataFactory = $entityManager->getMetadataFactory();
-        $filterArray = $filterManager->getAsArray($filters, $metadataFactory);
-        $config = $filterManager->getConfig();
-        $filterCategoryName = $filterCategory->getName();
-        $entityLists = array();
-        if (array_key_exists($filterCategoryName, $config)) {
-            $filterCategoryConfig = $config[$filterCategoryName];
-            $entityLists = $filterManager->getEntityLists($filterCategoryConfig['entities'], $metadataFactory);
-        } else {
-            $filterCategoryConfig = null;
+        $em = $this->getDoctrine()->getManager();
+
+        $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+
+        if (!$entity) {
+            throw $this->createNotFoundException('Unable to find Filter entity.');
         }
-        $form = $this->createForm(
-            new FilterType($filterClass, $filterCategoryClass),
-            $entity,
-            array(
-                'action'        => $this->generateUrl('MesdFilterBundle_filter_update', array('id' => $entity->getId())),
-                'entityManager' => $entityManager,
-                'method'        => 'POST',
-            )
-        );
-        $form->add('update', 'submit', array(
-            'label' => 'Update',
-        ));
+
         $deleteForm = $this->createDeleteForm($id);
+        $editForm = $this->createEditForm($entity);
+        $editForm->handleRequest($request);
 
-        $form->handleRequest($request);
+        if ($editForm->isValid()) {
+            $em->flush();
 
-        if ($form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($entity);
-            $entityManager->flush();
-
-            return $this->redirect($this->generateUrl('MesdFilterBundle_filter_show', array('id' => $entity->getId())));
+            return $this->redirect($this->generateUrl('filter_edit', array('id' => $id)));
         }
 
-        return $this->render(
-            $this->container->getParameter('mesd_filter.filter.template.edit'),
-            array(
-                'filterCategoryConfig' => $filterCategoryConfig,
-                'filters'              => $filterArray,
-                'form'                 => $form->createView(),
-                'entityLists'          => $entityLists,
-                'delete_form'          => $deleteForm,
-            )
-        );
+        return $this->render('MesdFilterBundle:Filter:edit.html.twig', array(
+            'entity'      => $entity,
+            'edit_form'   => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
     }
-
     /**
      * Deletes a Filter entity.
      *
@@ -253,20 +191,18 @@ class FilterController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $filterClass = $this->container->getParameter('mesd_filter.filter_class');
-            $filterRepository = $entityManager->getRepository($filterClass);
-            $entity = $filterRepository->findOneById($id);
+            $em = $this->getDoctrine()->getManager();
+            $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Filter entity.');
             }
 
-            $entityManager->remove($entity);
-            $entityManager->flush();
+            $em->remove($entity);
+            $em->flush();
         }
 
-        return $this->redirect($this->generateUrl('MesdFilterBundle_filter'));
+        return $this->redirect($this->generateUrl('filter'));
     }
 
     /**
@@ -279,7 +215,7 @@ class FilterController extends Controller
     private function createDeleteForm($id)
     {
         return $this->createFormBuilder()
-            ->setAction($this->generateUrl('MesdFilterBundle_filter_delete', array('id' => $id)))
+            ->setAction($this->generateUrl('filter_delete', array('id' => $id)))
             ->setMethod('DELETE')
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
