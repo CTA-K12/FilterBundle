@@ -24,6 +24,18 @@ class FilterCategory
      */
     private $codeName;
 
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $filter;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->filter = new \Doctrine\Common\Collections\ArrayCollection();
+    }
 
     /**
      * Get id
@@ -79,5 +91,38 @@ class FilterCategory
     public function getCodeName()
     {
         return $this->codeName;
+    }
+
+    /**
+     * Add filter
+     *
+     * @param \Mesd\FilterBundle\Entity\Filter $filter
+     * @return FilterCategory
+     */
+    public function addFilter(\Mesd\FilterBundle\Entity\Filter $filter)
+    {
+        $this->filter[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Remove filter
+     *
+     * @param \Mesd\FilterBundle\Entity\Filter $filter
+     */
+    public function removeFilter(\Mesd\FilterBundle\Entity\Filter $filter)
+    {
+        $this->filter->removeElement($filter);
+    }
+
+    /**
+     * Get filter
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFilter()
+    {
+        return $this->filter;
     }
 }

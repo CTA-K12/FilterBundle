@@ -2,6 +2,13 @@ Mesd\FilterBundle\Entity\FilterCategory:
     type: entity
     table: mesd_filter_category
     repositoryClass: Mesd\FilterBundle\Repository\FilterCategoryRepository
+    uniqueConstraints:
+        mesd_filterbundle__filter_category__name:
+            columns:
+                - name
+        mesd_filterbundle__filter_category__code_name:
+            columns:
+                - code_name
 
     fields:
         id:
@@ -18,3 +25,8 @@ Mesd\FilterBundle\Entity\FilterCategory:
             type: string
             column: code_name
             nullable: false
+
+    oneToMany:
+        filter:
+            targetEntity: Filter
+            mappedBy: filterCategory

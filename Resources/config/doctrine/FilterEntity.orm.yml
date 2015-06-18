@@ -2,7 +2,10 @@ Mesd\FilterBundle\Entity\FilterEntity:
     type: entity
     table: mesd_filter_entity
     repositoryClass: Mesd\FilterBundle\Repository\FilterEntityRepository
-
+    uniqueConstraints:
+        mesd_filterbundle__filter_entity__name:
+            columns:
+                - name
     fields:
         id:
             id: true

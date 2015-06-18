@@ -2,6 +2,10 @@ Mesd\FilterBundle\Entity\FilterAssociation:
     type: entity
     table: mesd_filter_association
     repositoryClass: Mesd\FilterBundle\Repository\FilterAssociationRepository
+    uniqueConstraints:
+        mesd_filterbundle__filter_association__name:
+            columns:
+                - name
 
     fields:
         id:
