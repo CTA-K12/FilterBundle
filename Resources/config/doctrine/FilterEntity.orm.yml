@@ -26,3 +26,8 @@ Mesd\FilterBundle\Entity\FilterEntity:
         filterAssociation:
             targetEntity: FilterAssociation
             mappedBy: filterEntity
+
+    oneToMany:
+        filterCategory:
+            targetEntity: FilterCategory
+            mappedBy: filterEntity

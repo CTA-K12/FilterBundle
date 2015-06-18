@@ -91,10 +91,18 @@
 
 ####FilterCategory
 
- id | name         | code_name
-----|--------------|---------------------
- 1  | Talent Agent | FILTER_TALENT_AGENT
- 2  | Gig          | FILTER_GIG
+ id | name         | code_name           | filter_entity_id
+----|--------------|---------------------|------------------
+ 1  | Talent Agent | FILTER_TALENT_AGENT | 1
+ 2  | Gig          | FILTER_GIG          | 1
+
+####FilterCategoryAssociation
+
+ category_id | association_id
+-------------|----------------
+ 1           | 1
+ 2           | 1
+ 2           | 2
 
 ####FilterJoin
 
@@ -225,8 +233,8 @@
 
 ####UserFilter
 
- user_id | filter_row_id
----------|---------------
+ user_id | filter_id
+---------|-----------
  2       | 2
  2       | 6
  3       | 4

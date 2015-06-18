@@ -40,3 +40,7 @@ Mesd\FilterBundle\Entity\FilterAssociation:
                 inverseJoinColumns:
                     filter_entity_id:
                         referencedColumnName: id
+
+        filterCategory:
+            targetEntity: FilterCategory
+            mappedBy: filterAssociation

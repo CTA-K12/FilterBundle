@@ -35,12 +35,18 @@ class FilterAssociation
     private $filterEntity;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $filterCategory;
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->filterJoin = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterEntity = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -163,5 +169,38 @@ class FilterAssociation
     public function getFilterEntity()
     {
         return $this->filterEntity;
+    }
+
+    /**
+     * Add filterCategory
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterCategory $filterCategory
+     * @return FilterAssociation
+     */
+    public function addFilterCategory(\Mesd\FilterBundle\Entity\FilterCategory $filterCategory)
+    {
+        $this->filterCategory[] = $filterCategory;
+
+        return $this;
+    }
+
+    /**
+     * Remove filterCategory
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterCategory $filterCategory
+     */
+    public function removeFilterCategory(\Mesd\FilterBundle\Entity\FilterCategory $filterCategory)
+    {
+        $this->filterCategory->removeElement($filterCategory);
+    }
+
+    /**
+     * Get filterCategory
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFilterCategory()
+    {
+        return $this->filterCategory;
     }
 }

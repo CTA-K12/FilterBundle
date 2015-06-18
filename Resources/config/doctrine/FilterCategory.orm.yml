@@ -26,6 +26,24 @@ Mesd\FilterBundle\Entity\FilterCategory:
             column: code_name
             nullable: false
 
+    manyToMany:
+        filterAssociation:
+            targetEntity: FilterAssociation
+            inversedBy: filterCategory
+            cascade: {  }
+            joinTable:
+                name: mesd_filter_category__association
+                joinColumns:
+                    filter_category_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    filter_association_id:
+                        referencedColumnName: id
+    manyToOne:
+        filterEntity:
+            targetEntity: FilterEntity
+            inversedBy: filterCategory
+
     oneToMany:
         filter:
             targetEntity: Filter
