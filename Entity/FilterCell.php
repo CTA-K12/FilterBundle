@@ -29,6 +29,11 @@ class FilterCell
      */
     private $filterJoin;
 
+    public function __toString()
+    {
+        return $this->getDescription();
+    }
+
     /**
      * Constructor
      */

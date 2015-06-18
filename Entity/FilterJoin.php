@@ -34,6 +34,11 @@ class FilterJoin
      */
     private $filterAssociation;
 
+    public function __toString()
+    {
+        return $this->getDescription();
+    }
+
     /**
      * Constructor
      */

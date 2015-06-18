@@ -22,12 +22,10 @@ Mesd\FilterBundle\Entity\FilterEntity:
             column: database_name
             nullable: false
 
-    manyToMany:
+    oneToMany:
         filterAssociation:
             targetEntity: FilterAssociation
             mappedBy: filterEntity
-
-    oneToMany:
         filterCategory:
             targetEntity: FilterCategory
             mappedBy: filterEntity

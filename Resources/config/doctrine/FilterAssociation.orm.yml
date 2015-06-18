@@ -28,19 +28,11 @@ Mesd\FilterBundle\Entity\FilterAssociation:
             targetEntity: FilterJoin
             mappedBy: filterAssociation
 
-        filterEntity:
-            targetEntity: FilterEntity
-            inversedBy: filterAssociation
-            cascade: {  }
-            joinTable:
-                name: mesd_filter_association__entity
-                joinColumns:
-                    filter_association_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    filter_entity_id:
-                        referencedColumnName: id
-
         filterCategory:
             targetEntity: FilterCategory
             mappedBy: filterAssociation
+
+    manyToOne:
+        filterEntity:
+            targetEntity: FilterEntity
+            inversedBy: filterAssociation

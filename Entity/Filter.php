@@ -34,6 +34,11 @@ class Filter
      */
     private $filterRow;
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     /**
      * Constructor
      */

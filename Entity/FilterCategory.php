@@ -39,6 +39,11 @@ class FilterCategory
      */
     private $filterAssociation;
 
+    public function __toString()
+    {
+        return $this->getName();
+    }
+
     /**
      * Constructor
      */

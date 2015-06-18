@@ -27,20 +27,25 @@ class FilterEntity
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $filterCategory;
+    private $filterAssociation;
 
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $filterAssociation;
+    private $filterCategory;
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
      * Constructor
      */
     public function __construct()
     {
-        $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterAssociation = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -100,39 +105,6 @@ class FilterEntity
     }
 
     /**
-     * Add filterCategory
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterCategory $filterCategory
-     * @return FilterEntity
-     */
-    public function addFilterCategory(\Mesd\FilterBundle\Entity\FilterCategory $filterCategory)
-    {
-        $this->filterCategory[] = $filterCategory;
-
-        return $this;
-    }
-
-    /**
-     * Remove filterCategory
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterCategory $filterCategory
-     */
-    public function removeFilterCategory(\Mesd\FilterBundle\Entity\FilterCategory $filterCategory)
-    {
-        $this->filterCategory->removeElement($filterCategory);
-    }
-
-    /**
-     * Get filterCategory
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFilterCategory()
-    {
-        return $this->filterCategory;
-    }
-
-    /**
      * Add filterAssociation
      *
      * @param \Mesd\FilterBundle\Entity\FilterAssociation $filterAssociation
@@ -163,5 +135,38 @@ class FilterEntity
     public function getFilterAssociation()
     {
         return $this->filterAssociation;
+    }
+
+    /**
+     * Add filterCategory
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterCategory $filterCategory
+     * @return FilterEntity
+     */
+    public function addFilterCategory(\Mesd\FilterBundle\Entity\FilterCategory $filterCategory)
+    {
+        $this->filterCategory[] = $filterCategory;
+
+        return $this;
+    }
+
+    /**
+     * Remove filterCategory
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterCategory $filterCategory
+     */
+    public function removeFilterCategory(\Mesd\FilterBundle\Entity\FilterCategory $filterCategory)
+    {
+        $this->filterCategory->removeElement($filterCategory);
+    }
+
+    /**
+     * Get filterCategory
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFilterCategory()
+    {
+        return $this->filterCategory;
     }
 }

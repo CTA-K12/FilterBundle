@@ -38,6 +38,11 @@ class FilterRow
         $this->filterCell = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->getDescription();
+    }
+
     /**
      * Get id
      *

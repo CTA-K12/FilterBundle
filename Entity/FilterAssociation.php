@@ -25,6 +25,11 @@ class FilterAssociation
     private $trail;
 
     /**
+     * @var \Mesd\FilterBundle\Entity\FilterEntity
+     */
+    private $filterEntity;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $filterJoin;
@@ -32,12 +37,12 @@ class FilterAssociation
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $filterEntity;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $filterCategory;
+
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
      * Constructor
@@ -45,7 +50,6 @@ class FilterAssociation
     public function __construct()
     {
         $this->filterJoin = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->filterEntity = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -106,6 +110,29 @@ class FilterAssociation
     }
 
     /**
+     * Set filterEntity
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterEntity $filterEntity
+     * @return FilterAssociation
+     */
+    public function setFilterEntity(\Mesd\FilterBundle\Entity\FilterEntity $filterEntity = null)
+    {
+        $this->filterEntity = $filterEntity;
+
+        return $this;
+    }
+
+    /**
+     * Get filterEntity
+     *
+     * @return \Mesd\FilterBundle\Entity\FilterEntity 
+     */
+    public function getFilterEntity()
+    {
+        return $this->filterEntity;
+    }
+
+    /**
      * Add filterJoin
      *
      * @param \Mesd\FilterBundle\Entity\FilterJoin $filterJoin
@@ -136,39 +163,6 @@ class FilterAssociation
     public function getFilterJoin()
     {
         return $this->filterJoin;
-    }
-
-    /**
-     * Add filterEntity
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterEntity $filterEntity
-     * @return FilterAssociation
-     */
-    public function addFilterEntity(\Mesd\FilterBundle\Entity\FilterEntity $filterEntity)
-    {
-        $this->filterEntity[] = $filterEntity;
-
-        return $this;
-    }
-
-    /**
-     * Remove filterEntity
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterEntity $filterEntity
-     */
-    public function removeFilterEntity(\Mesd\FilterBundle\Entity\FilterEntity $filterEntity)
-    {
-        $this->filterEntity->removeElement($filterEntity);
-    }
-
-    /**
-     * Get filterEntity
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFilterEntity()
-    {
-        return $this->filterEntity;
     }
 
     /**
