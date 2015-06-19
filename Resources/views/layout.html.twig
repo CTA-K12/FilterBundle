@@ -1,16 +1,12 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="UTF-8" />
-        {% block mesd_filter_head %}
-        {% endblock mesd_filter_head %}
-    </head>
-    <body>
-        <div>
-            {% block mesd_filter_content %}
-            {% endblock mesd_filter_content %}
-        </div>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/es5-shim/4.1.7/es5-sham.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react.min.js"></script>
-    </body>
-</html>
+{% extends '::base.html.twig' %}
+
+{% form_theme form 'MesdFilterBundle:Form:fields.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+{% endblock stylesheets %}
+
+{% block javascripts %}
+    <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+{% endblock javascripts %}

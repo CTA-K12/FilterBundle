@@ -1,4 +1,4 @@
-{% extends '::base.html.twig' %}
+{% extends 'MesdFilterBundle::layout.html.twig' %}
 
 {% block body -%}
     <h1>Filter list</h1>
@@ -33,11 +33,11 @@
         </tbody>
     </table>
 
-        <ul>
+    <ul>
         <li>
             <a href="{{ path('filter_new') }}">
                 Create a new entry
             </a>
         </li>
     </ul>
-    {% endblock %}
+{% endblock body %}

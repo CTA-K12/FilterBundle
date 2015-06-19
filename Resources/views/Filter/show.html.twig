@@ -1,4 +1,4 @@
-{% extends '::base.html.twig' %}
+{% extends 'MesdFilterBundle::layout.html.twig' %}
 
 {% block body -%}
     <h1>Filter</h1>
@@ -20,17 +20,17 @@
         </tbody>
     </table>
 
-        <ul class="record_actions">
-    <li>
-        <a href="{{ path('filter') }}">
-            Back to the list
-        </a>
-    </li>
-    <li>
-        <a href="{{ path('filter_edit', { 'id': entity.id }) }}">
-            Edit
-        </a>
-    </li>
-    <li>{{ form(delete_form) }}</li>
-</ul>
-{% endblock %}
+    <ul class="record_actions">
+        <li>
+            <a href="{{ path('filter') }}">
+                Back to the list
+            </a>
+        </li>
+        <li>
+            <a href="{{ path('filter_edit', { 'id': entity.id }) }}">
+                Edit
+            </a>
+        </li>
+        <li>{{ form(delete_form) }}</li>
+    </ul>
+{% endblock body %}
