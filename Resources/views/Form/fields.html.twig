@@ -1,0 +1,61 @@
+{%- block form_label -%}
+    {% if label is not sameas(false) -%}
+        {% if not compound -%}
+            {% set label_attr = label_attr|merge({'for': id}) %}
+        {%- endif %}
+        {% if required -%}
+            {% set label_attr = label_attr|merge({'class': (label_attr.class|default('') ~ ' required')|trim}) %}
+        {%- endif %}
+        {% if label is empty -%}
+            {%- if label_format is not empty -%}
+                {% set label = label_format|replace({
+                    '%name%': name,
+                    '%id%': id,
+                }) %}
+            {%- else -%}
+                {% set label = name|humanize %}
+            {%- endif -%}
+        {%- endif -%}
+        <label{% for attrname, attrvalue in label_attr %} {{ attrname }}="{{ attrvalue }}"{% endfor %}>{{ label|trans({}, translation_domain) }}</label>
+        {% if required %}<span class="text-danger" title="This field is required">*</span>{% endif %}
+    {%- endif -%}
+{%- endblock form_label -%}
+
+{% block _mesd_filterbundle_filter_filterRow_widget %}
+    {% if entity is defined %}
+    <div id="filter-interface">
+        <table class="table table-striped table-bordered table-hover table-responsive">
+            <tr>
+                <th>Gig Band</th>
+                <th></th>
+                <th>Gig Venue</th>
+            </tr>
+            <tr>
+                <td>Awesome Agencies, or Fantastic Forms</td>
+                <td>AND</td>
+                <td>The Garage, The Dive Bar, or Bar None</td>
+            </tr>
+            <tr>
+                <td colspan="3">OR</td>
+            </tr>
+            <tr>
+                <td>Beautiful Billings</td>
+                <td>AND</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3">OR</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td>AND</td>
+                <td>Comet Cash</td>
+            </tr>
+        </table>
+    </div>
+    {% else %}
+        <div id="filter-interface">
+            Please select a FIlter Category.
+        </div>
+    {% endif %}
+{% endblock %}

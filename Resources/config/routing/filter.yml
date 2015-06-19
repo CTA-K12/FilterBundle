@@ -28,3 +28,7 @@ filter_delete:
     path:     /{id}/delete
     defaults: { _controller: "MesdFilterBundle:Filter:delete" }
     methods:  [POST, DELETE]
+
+MesdUserBundle_filter_category_data:
+    path:     /category/{id}
+    defaults: { _controller: "MesdFilterBundle:Filter:categoryData" }

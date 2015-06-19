@@ -2,6 +2,7 @@
 
 namespace Mesd\FilterBundle\Controller;
 
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
@@ -21,9 +22,9 @@ class FilterController extends Controller
      */
     public function indexAction()
     {
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $entities = $em->getRepository('MesdFilterBundle:Filter')->findAll();
+        $entities = $entityManager->getRepository('MesdFilterBundle:Filter')->findAll();
 
         return $this->render('MesdFilterBundle:Filter:index.html.twig', array(
             'entities' => $entities,
@@ -40,9 +41,9 @@ class FilterController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($entity);
-            $em->flush();
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($entity);
+            $entityManager->flush();
 
             return $this->redirect($this->generateUrl('filter_show', array('id' => $entity->getId())));
         }
@@ -93,9 +94,9 @@ class FilterController extends Controller
      */
     public function showAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+        $entity = $entityManager->getRepository('MesdFilterBundle:Filter')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Filter entity.');
@@ -115,9 +116,9 @@ class FilterController extends Controller
      */
     public function editAction($id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+        $entity = $entityManager->getRepository('MesdFilterBundle:Filter')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Filter entity.');
@@ -157,9 +158,9 @@ class FilterController extends Controller
      */
     public function updateAction(Request $request, $id)
     {
-        $em = $this->getDoctrine()->getManager();
+        $entityManager = $this->getDoctrine()->getManager();
 
-        $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+        $entity = $entityManager->getRepository('MesdFilterBundle:Filter')->find($id);
 
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Filter entity.');
@@ -170,7 +171,7 @@ class FilterController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
-            $em->flush();
+            $entityManager->flush();
 
             return $this->redirect($this->generateUrl('filter_edit', array('id' => $id)));
         }
@@ -191,15 +192,15 @@ class FilterController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $entity = $em->getRepository('MesdFilterBundle:Filter')->find($id);
+            $entityManager = $this->getDoctrine()->getManager();
+            $entity = $entityManager->getRepository('MesdFilterBundle:Filter')->find($id);
 
             if (!$entity) {
                 throw $this->createNotFoundException('Unable to find Filter entity.');
             }
 
-            $em->remove($entity);
-            $em->flush();
+            $entityManager->remove($entity);
+            $entityManager->flush();
         }
 
         return $this->redirect($this->generateUrl('filter'));
@@ -220,5 +221,23 @@ class FilterController extends Controller
             ->add('submit', 'submit', array('label' => 'Delete'))
             ->getForm()
         ;
+    }
+
+    public function categoryDataAction($id)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+        $entity = $entityManager->getRepository('MesdFilterBundle:FilterCategory')->find($id);
+        $data = array();
+        foreach ($entity->getFilterAssociation() as $filterAssociation) {
+            $data[] = $filterAssociation->getName();
+        }
+
+        $response = new JsonResponse();
+
+        $response->setContent(
+            json_encode($data)
+        );
+
+        return $response;
     }
 }

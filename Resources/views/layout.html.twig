@@ -1,7 +1,5 @@
 {% extends '::base.html.twig' %}
 
-{% form_theme form 'MesdFilterBundle:Form:fields.html.twig' %}
-
 {% block stylesheets %}
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 {% endblock stylesheets %}
@@ -9,4 +7,7 @@
 {% block javascripts %}
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    {% javascripts '@MesdFilterBundle/Resources/public/js/filter.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 {% endblock javascripts %}
