@@ -46,18 +46,22 @@ $( document ).ready(function()
                 html += '<label for="cell-join" class="control-label">' + association[key].name + ':</label>';
                 html += '<select class="form-control" id="' + association[key].code + '-cell-join" data-association-id="' + association[key].id + '">';
                 html += '<option></option>';
-                /*
                 for (var i = 0; i < association[key].cells.length; i++) {
                     html += '<option value="' + association[key].cells[i].id + '">';
                     html += association[key].cells[i].description;
                     html += '<option>';
                 }
-                */
                 html += '<option>Other</option>';
                 html += '</select>';
                 html += '</div>';
-                html += '<div class="form-group">';
-                html += '<a href="#" class="btn btn-default">Add New Cell</a>';
+                html += '<div id="' + association[key].code + '-new-cell" class="form-group hidden">';
+                html += '<select class="form-control" multiple="multiple">';
+                for (var i = 0; i < association[key].values.length; i++) {
+                    html += '<option value="' + association[key].values[i].id + '">';
+                    html += association[key].values[i].name;
+                    html += '<option>';
+                }
+                html += '</select>';
                 html += '</div>';
                 html += '</form>';
                 html += '</div>';

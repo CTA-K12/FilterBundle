@@ -32,6 +32,11 @@ class FilterEntity
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
+    private $trailAssociation;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $filterCategory;
 
     public function __toString()
@@ -45,6 +50,7 @@ class FilterEntity
     public function __construct()
     {
         $this->filterAssociation = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->trailAssociation = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -135,6 +141,39 @@ class FilterEntity
     public function getFilterAssociation()
     {
         return $this->filterAssociation;
+    }
+
+    /**
+     * Add trailAssociation
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterAssociation $trailAssociation
+     * @return FilterEntity
+     */
+    public function addTrailAssociation(\Mesd\FilterBundle\Entity\FilterAssociation $trailAssociation)
+    {
+        $this->trailAssociation[] = $trailAssociation;
+
+        return $this;
+    }
+
+    /**
+     * Remove trailAssociation
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterAssociation $trailAssociation
+     */
+    public function removeTrailAssociation(\Mesd\FilterBundle\Entity\FilterAssociation $trailAssociation)
+    {
+        $this->trailAssociation->removeElement($trailAssociation);
+    }
+
+    /**
+     * Get trailAssociation
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getTrailAssociation()
+    {
+        return $this->trailAssociation;
     }
 
     /**

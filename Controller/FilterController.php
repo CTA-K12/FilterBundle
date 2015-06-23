@@ -233,11 +233,20 @@ class FilterController extends Controller
             $cells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
             $name = $filterAssociation->getName();
             $code = str_replace(' ', '-', strtolower($name));
+            $entities = $entityManager->getRepository($filterAssociation->getTrailEntity()->getName())->findAll();
+            $values = array();
+            foreach($entities as $entity) {
+                $values[] = array(
+                    'id' => $entity->getId(),
+                    'name' => $entity->__toString();
+                );
+            }
             $data[$code] = array(
-                'code' => $code,
-                'id'   => $id,
-                'name' => $name,
-                'cells' => $cells,
+                'cells'  => $cells,
+                'code'   => $code,
+                'id'     => $id,
+                'name'   => $name,
+                'values' => $values,
             );
         }
 

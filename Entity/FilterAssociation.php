@@ -35,6 +35,11 @@ class FilterAssociation
     private $filterEntity;
 
     /**
+     * @var \Mesd\FilterBundle\Entity\FilterEntity
+     */
+    private $trailEntity;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $filterCategory;
@@ -163,6 +168,29 @@ class FilterAssociation
     public function getFilterEntity()
     {
         return $this->filterEntity;
+    }
+
+    /**
+     * Set trailEntity
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterEntity $trailEntity
+     * @return FilterAssociation
+     */
+    public function setTrailEntity(\Mesd\FilterBundle\Entity\FilterEntity $trailEntity = null)
+    {
+        $this->trailEntity = $trailEntity;
+
+        return $this;
+    }
+
+    /**
+     * Get trailEntity
+     *
+     * @return \Mesd\FilterBundle\Entity\FilterEntity 
+     */
+    public function getTrailEntity()
+    {
+        return $this->trailEntity;
     }
 
     /**
