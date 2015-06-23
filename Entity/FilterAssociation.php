@@ -25,6 +25,11 @@ class FilterAssociation
     private $trail;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $filterCell;
+
+    /**
      * @var \Mesd\FilterBundle\Entity\FilterEntity
      */
     private $filterEntity;
@@ -49,6 +54,7 @@ class FilterAssociation
      */
     public function __construct()
     {
+        $this->filterCell = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterJoin = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
@@ -107,6 +113,39 @@ class FilterAssociation
     public function getTrail()
     {
         return $this->trail;
+    }
+
+    /**
+     * Add filterCell
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterCell $filterCell
+     * @return FilterAssociation
+     */
+    public function addFilterCell(\Mesd\FilterBundle\Entity\FilterCell $filterCell)
+    {
+        $this->filterCell[] = $filterCell;
+
+        return $this;
+    }
+
+    /**
+     * Remove filterCell
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterCell $filterCell
+     */
+    public function removeFilterCell(\Mesd\FilterBundle\Entity\FilterCell $filterCell)
+    {
+        $this->filterCell->removeElement($filterCell);
+    }
+
+    /**
+     * Get filterCell
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getFilterCell()
+    {
+        return $this->filterCell;
     }
 
     /**

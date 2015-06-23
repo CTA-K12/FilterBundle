@@ -36,3 +36,8 @@ Mesd\FilterBundle\Entity\FilterAssociation:
         filterEntity:
             targetEntity: FilterEntity
             inversedBy: filterAssociation
+
+    oneToMany:
+        filterCell:
+            targetEntity: FilterCell
+            mappedBy: filterAssociation

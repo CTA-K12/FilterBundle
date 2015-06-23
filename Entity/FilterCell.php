@@ -20,6 +20,11 @@ class FilterCell
     private $description;
 
     /**
+     * @var \Mesd\FilterBundle\Entity\FilterAssociation
+     */
+    private $filterAssociation;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $filterRow;
@@ -74,6 +79,29 @@ class FilterCell
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set filterAssociation
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterAssociation $filterAssociation
+     * @return FilterCell
+     */
+    public function setFilterAssociation(\Mesd\FilterBundle\Entity\FilterAssociation $filterAssociation = null)
+    {
+        $this->filterAssociation = $filterAssociation;
+
+        return $this;
+    }
+
+    /**
+     * Get filterAssociation
+     *
+     * @return \Mesd\FilterBundle\Entity\FilterAssociation 
+     */
+    public function getFilterAssociation()
+    {
+        return $this->filterAssociation;
     }
 
     /**

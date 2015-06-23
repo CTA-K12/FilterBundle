@@ -29,6 +29,11 @@ class FilterRow
      */
     private $filterCell;
 
+    public function __toString()
+    {
+        return $this->getDescription();
+    }
+
     /**
      * Constructor
      */
@@ -36,11 +41,6 @@ class FilterRow
     {
         $this->filter = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterCell = new \Doctrine\Common\Collections\ArrayCollection();
-    }
-
-    public function __toString()
-    {
-        return $this->getDescription();
     }
 
     /**
