@@ -37,11 +37,6 @@ class FilterAssociation
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
-    private $filterJoin;
-
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
     private $filterCategory;
 
     public function __toString()
@@ -55,7 +50,6 @@ class FilterAssociation
     public function __construct()
     {
         $this->filterCell = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->filterJoin = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
@@ -169,39 +163,6 @@ class FilterAssociation
     public function getFilterEntity()
     {
         return $this->filterEntity;
-    }
-
-    /**
-     * Add filterJoin
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterJoin $filterJoin
-     * @return FilterAssociation
-     */
-    public function addFilterJoin(\Mesd\FilterBundle\Entity\FilterJoin $filterJoin)
-    {
-        $this->filterJoin[] = $filterJoin;
-
-        return $this;
-    }
-
-    /**
-     * Remove filterJoin
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterJoin $filterJoin
-     */
-    public function removeFilterJoin(\Mesd\FilterBundle\Entity\FilterJoin $filterJoin)
-    {
-        $this->filterJoin->removeElement($filterJoin);
-    }
-
-    /**
-     * Get filterJoin
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFilterJoin()
-    {
-        return $this->filterJoin;
     }
 
     /**

@@ -23,16 +23,3 @@ Mesd\FilterBundle\Entity\FilterJoin:
         filterCell:
             targetEntity: FilterCell
             mappedBy: filterJoin
-
-        filterAssociation:
-            targetEntity: FilterAssociation
-            inversedBy: filterJoin
-            cascade: {  }
-            joinTable:
-                name: mesd_filter_join__association
-                joinColumns:
-                    filter_join_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    filter_association_id:
-                        referencedColumnName: id

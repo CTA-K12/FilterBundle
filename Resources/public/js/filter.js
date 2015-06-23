@@ -9,6 +9,7 @@ $( document ).ready(function()
         $.ajax({
             url: url
         }).done(function(association) {
+            console.log(association);
             var html = '<table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="1">';
             html += '<tr>';
             var i = 0;
@@ -43,8 +44,16 @@ $( document ).ready(function()
                 html += '<form>';
                 html += '<div class="form-group">';
                 html += '<label for="cell-join" class="control-label">' + association[key].name + ':</label>';
-                html += '<select class="form-control" id="cell-join">';
-                html += $('#' + key + '-template').html();
+                html += '<select class="form-control" id="' + association[key].code + '-cell-join" data-association-id="' + association[key].id + '">';
+                html += '<option></option>';
+                /*
+                for (var i = 0; i < association[key].cells.length; i++) {
+                    html += '<option value="' + association[key].cells[i].id + '">';
+                    html += association[key].cells[i].description;
+                    html += '<option>';
+                }
+                */
+                html += '<option>Other</option>';
                 html += '</select>';
                 html += '</div>';
                 html += '<div class="form-group">';
@@ -104,6 +113,7 @@ $( document ).ready(function()
         return html;
     }
     
+    /*
     $('#exampleModal').on('show.bs.modal', function (event) {
         var button = $(event.relatedTarget); // Button that triggered the modal
         var recipient = button.data('whatever'); // Extract info from data-* attributes
@@ -113,4 +123,5 @@ $( document ).ready(function()
         modal.find('.modal-title').text('New message to ' + recipient);
         modal.find('.modal-body input').val(recipient);
     });
+    */
 });

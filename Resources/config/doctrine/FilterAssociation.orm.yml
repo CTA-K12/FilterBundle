@@ -24,10 +24,6 @@ Mesd\FilterBundle\Entity\FilterAssociation:
             nullable: false
 
     manyToMany:
-        filterJoin:
-            targetEntity: FilterJoin
-            mappedBy: filterAssociation
-
         filterCategory:
             targetEntity: FilterCategory
             mappedBy: filterAssociation

@@ -81,13 +81,10 @@ class FilterController extends Controller
     {
         $entity = new Filter();
         $form   = $this->createCreateForm($entity);
-        $entityManager = $this->getDoctrine()->getManager();
-        $joins  = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findAll();
 
         return $this->render('MesdFilterBundle:Filter:new.html.twig', array(
             'entity' => $entity,
-            'form'   => $form->createView(),
-            'joins'   => $joins,
+            'form'   => $form->createView()
         ));
     }
 
@@ -232,11 +229,15 @@ class FilterController extends Controller
         $entity = $entityManager->getRepository('MesdFilterBundle:FilterCategory')->find($id);
         $data = array();
         foreach ($entity->getFilterAssociation() as $filterAssociation) {
+            $id = $filterAssociation->getId();
+            $cells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
             $name = $filterAssociation->getName();
             $code = str_replace(' ', '-', strtolower($name));
             $data[$code] = array(
                 'code' => $code,
+                'id'   => $id,
                 'name' => $name,
+                'cells' => $cells,
             );
         }
 

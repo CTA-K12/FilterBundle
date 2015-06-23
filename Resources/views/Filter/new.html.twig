@@ -64,15 +64,7 @@
         </li>
     </ul>
     
-    <select id="cell-join-template" class="hidden">
-        <option></option>
-        {% for join in joins %}
-            <option value="{{ join.id }}">join.description</option>
-        {% endfor %}
-        <option>Other</option>
-    </select>
-
     <div id="modals">
     </div>
-    
+
 {% endblock body %}
