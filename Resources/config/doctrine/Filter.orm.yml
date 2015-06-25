@@ -2,6 +2,13 @@ Mesd\FilterBundle\Entity\Filter:
     type: entity
     table: mesd_filter
     repositoryClass: Mesd\FilterBundle\Repository\FilterRepository
+    uniqueConstraints:
+        mesd_filterbundle__filter__name:
+            columns:
+                - name
+        mesd_filterbundle__filter__description:
+            columns:
+                - description
 
     fields:
         id:

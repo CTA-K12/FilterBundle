@@ -6,6 +6,9 @@ Mesd\FilterBundle\Entity\FilterEntity:
         mesd_filterbundle__filter_entity__name:
             columns:
                 - name
+        mesd_filterbundle__filter_entity__database_name:
+            columns:
+                - database_name
     fields:
         id:
             id: true
@@ -28,7 +31,7 @@ Mesd\FilterBundle\Entity\FilterEntity:
             mappedBy: filterEntity
         trailAssociation:
             targetEntity: FilterAssociation
-            mappedBy: filterEntity
+            mappedBy: trailEntity
         filterCategory:
             targetEntity: FilterCategory
             mappedBy: filterEntity

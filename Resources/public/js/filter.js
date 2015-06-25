@@ -9,7 +9,10 @@ $( document ).ready(function()
         $.ajax({
             url: url
         }).done(function(data) {
-            var html = '<table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="1">';
+            var html = '<table';
+            html += ' id="filter-interface-table"';
+            html += ' class="table table-striped table-bordered table-hover table-responsive"';
+            html += ' data-rows="1">';
             html += '<tr>';
             var i = 0;
             for (var key in data['associations']) {
@@ -32,29 +35,59 @@ $( document ).ready(function()
             );
             html = '';
             for (var key in data['associations']) {
-                html += '<div class="modal fade" id="' + data['associations'][key].code + 'Modal" tabindex="-1" role="dialog" aria-labelledby="' + data['associations'][key].code + 'ModalLabel">';
-                html += '<div class="modal-dialog" role="document">';
-                html += '<div class="modal-content">';
-                html += '<div class="modal-header">';
-                html += '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>';
-                html += '<h4 class="modal-title" id="' + data['associations'][key].code + 'ModalLabel">Edit ' + data['associations'][key].name + '</h4>';
+                html += '<div';
+                html += ' class="modal fade"';
+                html += ' id="' + data['associations'][key].code + 'Modal"';
+                html += ' tabindex="-1"';
+                html += ' role="dialog"';
+                html += ' aria-labelledby="' + data['associations'][key].code + 'ModalLabel">';
+                html += '<div';
+                html += ' class="modal-dialog"';
+                html += ' role="document">';
+                html += '<div';
+                html += ' class="modal-content">';
+                html += '<div';
+                html += ' class="modal-header">';
+                html += '<button type="button"';
+                html += ' class="close"';
+                html += ' data-dismiss="modal"';
+                html += ' aria-label="Close"><span';
+                html += ' aria-hidden="true">&times;</span></button>';
+                html += '<h4';
+                html += ' class="modal-title"';
+                html += ' id="' + data['associations'][key].code + 'ModalLabel">Edit ' + data['associations'][key].name + '</h4>';
                 html += '</div>';
-                html += '<div class="modal-body">';
-                html += '<form>';
-                html += '<div class="form-group">';
-                html += '<label for="cell-join" class="control-label">' + data['associations'][key].name + ':</label>';
-                html += '<select class="form-control change-cell-dropdown" id="' + data['associations'][key].code + '-cell-join" data-association-id="' + data['associations'][key].id + '">';
+                html += '<div';
+                html += ' class="modal-body">';
+                html += '<form';
+                html += ' id="' + data['associations'][key].code + 'Form">';
+                html += '<div';
+                html += ' class="form-group">';
+                html += '<label';
+                html += ' for="cell-join"';
+                html += ' class="control-label">' + data['associations'][key].name + ':</label>';
+                html += '<select';
+                html += ' class="form-control change-cell-dropdown"';
+                html += ' id="' + data['associations'][key].code + '-cell-join"';
+                html += ' name="cell-join"';
+                html += ' data-association-id="' + data['associations'][key].associationId + '">';
                 html += '<option></option>';
                 for (var i = 0; i < data['associations'][key].cells.length; i++) {
                     html += '<option value="' + data['associations'][key].cells[i].id + '">';
                     html += data['associations'][key].cells[i].description;
                     html += '</option>';
                 }
-                html += '<option value="-1">Other</option>';
+                html += '<option';
+                html += ' value="-1">Other</option>';
                 html += '</select>';
                 html += '</div>';
-                html += '<div class="form-group hidden">';
-                html += '<select id="' + data['associations'][key].code + '-new-cell" class="form-control new-cell" multiple="multiple">';
+                html += '<div';
+                html += ' class="form-group hidden">';
+                html += '<select';
+                html += ' id="' + data['associations'][key].code + '-new-cell"';
+                html += ' name="new-cell[]"';
+                html += ' class="form-control new-cell"';
+                html += ' multiple="multiple">';
                 for (var i = 0; i < data['associations'][key].values.length; i++) {
                     html += '<option value="' + data['associations'][key].values[i].id + '">';
                     html += data['associations'][key].values[i].name;
@@ -62,11 +95,23 @@ $( document ).ready(function()
                 }
                 html += '</select>';
                 html += '</div>';
+                html += '<input type="hidden"';
+                html += ' name="trail-entity-id"';
+                html += ' value="' + data['associations'][key].trailEntityId + '" />';
+                html += '<input type="hidden"';
+                html += ' name="association-id"';
+                html += ' value="' + data['associations'][key].associationId + '" />';
                 html += '</form>';
                 html += '</div>';
-                html += '<div class="modal-footer">';
-                html += '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>';
-                html += '<button type="button" class="btn btn-primary modal-save" data-modal="' + data['associations'][key].code + 'Modal">Set ' + data['associations'][key].name + '</button>';
+                html += '<div';
+                html += ' class="modal-footer">';
+                html += '<button type="button"';
+                html += ' class="btn btn-default"';
+                html += ' data-dismiss="modal">Close</button>';
+                html += '<button type="button"';
+                html += ' class="btn btn-primary modal-save"';
+                html += ' data-code="' + data['associations'][key].code + '"';
+                html += ' data-url="' + data['url'] + '">Set ' + data['associations'][key].name + '</button>';
                 html += '</div>';
                 html += '</div>';
                 html += '</div>';
@@ -111,19 +156,19 @@ $( document ).ready(function()
             });
             
             $('.modal-save').on('click', function () {
-                var modal = $(this).closest('.modal');
-                console.log(modal.find('form'));
-                console.log(modal.find('form').serialize());
-                console.log(modal.find('form')[0]);
-                var data = modal.find('form')[0].serialize();
+                var button = $(this);
+                var url = button.data('url');
+                var modal = $('#' + button.data('code') + 'Modal');
+                var form = $('#' + button.data('code') + 'Form');
+                var data = form.serializeArray();
                 console.log(data);
-                var url = modal.data('url');
                 $.ajax({
                     url: url,
-                    data: data
+                    data: data,
+                    method: 'POST'
                 }).done(function(data) {
-                    console.log('cool');
-                    $('#' + modal.data('modal')).modal('hide');
+                    console.log(data);
+                    modal.modal('hide');
                 });
             });
         });

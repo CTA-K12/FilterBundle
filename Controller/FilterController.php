@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Mesd\FilterBundle\Entity\Filter;
+use Mesd\FilterBundle\Entity\FilterCell;
 use Mesd\FilterBundle\Form\FilterType;
 
 /**
@@ -228,7 +229,7 @@ class FilterController extends Controller
         $entityManager = $this->getDoctrine()->getManager();
         $entity = $entityManager->getRepository('MesdFilterBundle:FilterCategory')->find($id);
         $data = array(
-            'url' => $this->generateUrl('MesdUserBundle_filter_create_cell'),
+            'url'          => $this->generateUrl('MesdUserBundle_filter_create_cell'),
             'associations' => array(),
         );
         foreach ($entity->getFilterAssociation() as $filterAssociation) {
@@ -236,23 +237,76 @@ class FilterController extends Controller
             $cells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
             $name = $filterAssociation->getName();
             $code = str_replace(' ', '-', strtolower($name));
-            $entities = $entityManager->getRepository($filterAssociation->getTrailEntity()->getName())->findAll();
+            $trailEntity = $filterAssociation->getTrailEntity();
+            $entities = $entityManager->getRepository($trailEntity->getName())->findAll();
             $values = array();
             foreach($entities as $entity) {
                 $values[] = array(
-                    'id' => $entity->getId(),
+                    'id'   => $entity->getId(),
                     'name' => $entity->__toString(),
                 );
             }
             $data['associations'][$code] = array(
-                'cells'  => $cells,
-                'code'   => $code,
-                'id'     => $id,
-                'name'   => $name,
-                'values' => $values,
+                'cells'         => $cells,
+                'code'          => $code,
+                'associationId' => $id,
+                'name'          => $name,
+                'trailEntityId' => $trailEntity->getId(),
+                'values'        => $values,
             );
         }
 
+        $response = new JsonResponse();
+
+        $response->setContent(
+            json_encode($data)
+        );
+
+        return $response;
+    }
+    
+    public function createCellAction(Request $request)
+    {
+        $entityManager = $this->getDoctrine()->getManager();
+
+        $cellJoin = $request->request->get('cell-join');
+
+        if ('-1' === $cellJoin) {
+            $filterCell = new FilterCell();
+            $associationId = $request->request->get('association-id');
+            $filterAssociation = $entityManager->getRepository('MesdFilterBundle:FilterAssociation')->find($associationId);
+            $filterCell->setFilterAssociation($filterAssociation);
+            $newCell = $request->request->get('new-cell');
+            $trailEntityId = $request->request->get('trail-entity-id');
+            $filterEntity = $entityManager->getRepository('MesdFilterBundle:FilterEntity')->find($trailEntityId);
+            $entities = $entityManager->getRepository($filterEntity->getName())->findById($newCell);
+            $description = $filterAssociation->getName() . ' is ';
+            $value = '';
+            $length = count($entities);
+            for ($i = 0; $i < $length; $i++) {
+                if (0 < $i) {
+                    $description .= ', ';
+                    $value .= ',';
+                }
+                if ($length === ($i + 1)) {
+                    $description .= 'or ';
+                }
+                $description .= $entities[$i]->__toString();
+                $value .= $entities[$i]->getId();
+            }
+            $filterCell->setDescription($description);
+            $filterCell->setValue($value);
+            $entityManager->persist($filterCell);
+            $entityManager->flush($filterCell);
+        } else {
+            $filterCell = $entityManager->getRepository('MesdFilterBundle:FilterCell')->find($cellJoin);
+        }
+
+        $data = array(
+            'id'    => $filterCell->getId(),
+            'name'  => $filterCell->getDescription(),
+            'value' => $filterCell->getValue(),
+        );
         $response = new JsonResponse();
 
         $response->setContent(

@@ -17,6 +17,11 @@ class FilterCell
     /**
      * @var string
      */
+    private $value;
+
+    /**
+     * @var string
+     */
     private $description;
 
     /**
@@ -29,11 +34,6 @@ class FilterCell
      */
     private $filterRow;
 
-    /**
-     * @var \Doctrine\Common\Collections\Collection
-     */
-    private $filterJoin;
-
     public function __toString()
     {
         return $this->getDescription();
@@ -45,7 +45,6 @@ class FilterCell
     public function __construct()
     {
         $this->filterRow = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->filterJoin = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -56,6 +55,29 @@ class FilterCell
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set value
+     *
+     * @param string $value
+     * @return FilterCell
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+
+        return $this;
+    }
+
+    /**
+     * Get value
+     *
+     * @return string 
+     */
+    public function getValue()
+    {
+        return $this->value;
     }
 
     /**
@@ -135,38 +157,5 @@ class FilterCell
     public function getFilterRow()
     {
         return $this->filterRow;
-    }
-
-    /**
-     * Add filterJoin
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterJoin $filterJoin
-     * @return FilterCell
-     */
-    public function addFilterJoin(\Mesd\FilterBundle\Entity\FilterJoin $filterJoin)
-    {
-        $this->filterJoin[] = $filterJoin;
-
-        return $this;
-    }
-
-    /**
-     * Remove filterJoin
-     *
-     * @param \Mesd\FilterBundle\Entity\FilterJoin $filterJoin
-     */
-    public function removeFilterJoin(\Mesd\FilterBundle\Entity\FilterJoin $filterJoin)
-    {
-        $this->filterJoin->removeElement($filterJoin);
-    }
-
-    /**
-     * Get filterJoin
-     *
-     * @return \Doctrine\Common\Collections\Collection 
-     */
-    public function getFilterJoin()
-    {
-        return $this->filterJoin;
     }
 }

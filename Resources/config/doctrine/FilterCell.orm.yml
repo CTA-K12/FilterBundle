@@ -2,6 +2,14 @@ Mesd\FilterBundle\Entity\FilterCell:
     type: entity
     table: mesd_filter_cell
     repositoryClass: Mesd\FilterBundle\Repository\FilterCellRepository
+    uniqueConstraints:
+        mesd_filterbundle__filter_cell__value__filter_association_id:
+            columns:
+                - value
+                - filter_association_id
+        mesd_filterbundle__filter_cell__description:
+            columns:
+                - description
 
     fields:
         id:
@@ -10,6 +18,10 @@ Mesd\FilterBundle\Entity\FilterCell:
             nullable: false
             generator:
                 strategy: AUTO
+        value:
+            type: text
+            column: value
+            nullable: false
         description:
             type: text
             column: description
@@ -19,18 +31,6 @@ Mesd\FilterBundle\Entity\FilterCell:
         filterRow:
             targetEntity: FilterRow
             mappedBy: filterCell
-
-        filterJoin:
-            targetEntity: FilterJoin
-            inversedBy: filterCell
-            joinTable:
-                name: mesd_filter_cell__join
-                joinColumns:
-                    filter_cell_id:
-                        referencedColumnName: id
-                inverseJoinColumns:
-                    filter_join_id:
-                        referencedColumnName: id
 
     manyToOne:
         filterAssociation:
