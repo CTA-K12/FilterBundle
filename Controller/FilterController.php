@@ -227,7 +227,10 @@ class FilterController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
         $entity = $entityManager->getRepository('MesdFilterBundle:FilterCategory')->find($id);
-        $data = array();
+        $data = array(
+            'url' => $this->generateUrl('MesdUserBundle_filter_create_cell'),
+            'associations' => array(),
+        );
         foreach ($entity->getFilterAssociation() as $filterAssociation) {
             $id = $filterAssociation->getId();
             $cells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
@@ -238,10 +241,10 @@ class FilterController extends Controller
             foreach($entities as $entity) {
                 $values[] = array(
                     'id' => $entity->getId(),
-                    'name' => $entity->__toString();
+                    'name' => $entity->__toString(),
                 );
             }
-            $data[$code] = array(
+            $data['associations'][$code] = array(
                 'cells'  => $cells,
                 'code'   => $code,
                 'id'     => $id,
