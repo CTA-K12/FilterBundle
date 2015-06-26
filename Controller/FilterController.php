@@ -234,7 +234,15 @@ class FilterController extends Controller
         );
         foreach ($entity->getFilterAssociation() as $filterAssociation) {
             $id = $filterAssociation->getId();
-            $cells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
+            $filterCells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
+            $cells = array();
+            foreach($filterCells as $filterCell)
+            {
+                $cells[] = array(
+                    'id'          => $filterCell->getId(),
+                    'description' => $filterCell->getDescription(),
+                );
+            }
             $name = $filterAssociation->getName();
             $code = str_replace(' ', '-', strtolower($name));
             $trailEntity = $filterAssociation->getTrailEntity();
@@ -281,21 +289,17 @@ class FilterController extends Controller
             $filterEntity = $entityManager->getRepository('MesdFilterBundle:FilterEntity')->find($trailEntityId);
             $entities = $entityManager->getRepository($filterEntity->getName())->findById($newCell);
             $description = $filterAssociation->getName() . ' is ';
-            $value = '';
             $length = count($entities);
             for ($i = 0; $i < $length; $i++) {
                 if (0 < $i) {
                     $description .= ', ';
-                    $value .= ',';
-                }
-                if ($length === ($i + 1)) {
-                    $description .= 'or ';
+                    if ($length === ($i + 1)) {
+                        $description .= 'or ';
+                    }
                 }
                 $description .= $entities[$i]->__toString();
-                $value .= $entities[$i]->getId();
             }
             $filterCell->setDescription($description);
-            $filterCell->setValue($value);
             $entityManager->persist($filterCell);
             $entityManager->flush($filterCell);
         } else {
@@ -303,9 +307,8 @@ class FilterController extends Controller
         }
 
         $data = array(
-            'id'    => $filterCell->getId(),
-            'name'  => $filterCell->getDescription(),
-            'value' => $filterCell->getValue(),
+            'id'          => $filterCell->getId(),
+            'description' => $filterCell->getDescription(),
         );
         $response = new JsonResponse();
 

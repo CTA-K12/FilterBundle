@@ -17,11 +17,6 @@ class FilterCell
     /**
      * @var string
      */
-    private $value;
-
-    /**
-     * @var string
-     */
     private $description;
 
     /**
@@ -55,29 +50,6 @@ class FilterCell
     public function getId()
     {
         return $this->id;
-    }
-
-    /**
-     * Set value
-     *
-     * @param string $value
-     * @return FilterCell
-     */
-    public function setValue($value)
-    {
-        $this->value = $value;
-
-        return $this;
-    }
-
-    /**
-     * Get value
-     *
-     * @return string 
-     */
-    public function getValue()
-    {
-        return $this->value;
     }
 
     /**

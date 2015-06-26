@@ -22,6 +22,8 @@
 {%- endblock form_label -%}
 
 {% block _mesd_filterbundle_filter_filterRow_widget %}
+    {%- set type = type|default('text') -%}
+    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
     {% if entity is defined %}
     <div id="filter-interface">
         <table class="table table-striped table-bordered table-hover table-responsive">

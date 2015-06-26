@@ -3,10 +3,6 @@ Mesd\FilterBundle\Entity\FilterCell:
     table: mesd_filter_cell
     repositoryClass: Mesd\FilterBundle\Repository\FilterCellRepository
     uniqueConstraints:
-        mesd_filterbundle__filter_cell__value__filter_association_id:
-            columns:
-                - value
-                - filter_association_id
         mesd_filterbundle__filter_cell__description:
             columns:
                 - description
@@ -18,10 +14,6 @@ Mesd\FilterBundle\Entity\FilterCell:
             nullable: false
             generator:
                 strategy: AUTO
-        value:
-            type: text
-            column: value
-            nullable: false
         description:
             type: text
             column: description

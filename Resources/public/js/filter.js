@@ -111,7 +111,8 @@ $( document ).ready(function()
                 html += '<button type="button"';
                 html += ' class="btn btn-primary modal-save"';
                 html += ' data-code="' + data['associations'][key].code + '"';
-                html += ' data-url="' + data['url'] + '">Set ' + data['associations'][key].name + '</button>';
+                html += ' data-url="' + data['url'] + '"';
+                html += ' >Set ' + data['associations'][key].name + '</button>';
                 html += '</div>';
                 html += '</div>';
                 html += '</div>';
@@ -145,14 +146,11 @@ $( document ).ready(function()
             });
 
             $('.modal').on('show.bs.modal', function (event) {
-                /*
-                var button = $(event.relatedTarget); // Button that triggered the modal
-                var recipient = button.data('whatever'); // Extract info from data-* attributes
-                // If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
-                // Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
-                */
+                var button = $(event.relatedTarget);
+                var divId = button.data('div-id');
                 var modal = $(this);
                 modal.find('.new-cell option').removeAttr('selected');
+                modal.find('.modal-save').data('div-id', divId);
             });
             
             $('.modal-save').on('click', function () {
@@ -160,14 +158,16 @@ $( document ).ready(function()
                 var url = button.data('url');
                 var modal = $('#' + button.data('code') + 'Modal');
                 var form = $('#' + button.data('code') + 'Form');
+                var div = $('#' + button.data('div-id'));
                 var data = form.serializeArray();
-                console.log(data);
                 $.ajax({
                     url: url,
                     data: data,
                     method: 'POST'
                 }).done(function(data) {
-                    console.log(data);
+                    div.html(data.description);
+                    div.data('cell-id', data.id);
+                    updateDefinition();
                     modal.modal('hide');
                 });
             });
@@ -177,18 +177,32 @@ $( document ).ready(function()
     function addRow(association)
     {
         var html = '';
-        html += '<tr>';
+        html += '<tr';
+        html += ' class="filter-row">';
         var i = 0;
         for (var key in association) {
             if (0 < i) {
                 html += '<td>AND</td>';
             }
+            var row = $('#filter-interface-table').data('rows');
+            if (undefined === row) {
+                row = 0;
+            }
             html += '<td>';
-            html += '<div>';
+            html += '<div';
+            html += ' id="' + association[key].code + '-' + row + '"';
+            html += ' class="filter-cell"';
+            html += ' data-cell-id="*">';
             html += 'No ' + association[key].name + ' selected';
             html += '</div>';
             html += '<div>';
-            html += '<button type="button" class="btn btn-default" data-toggle="modal" data-target="#' + association[key].code + 'Modal" data-whatever="' + association[key].code + '">';
+            html += '<button';
+            html += ' type="button"';
+            html += ' class="btn btn-default"';
+            html += ' data-toggle="modal"';
+            html += ' data-target="#' + association[key].code + 'Modal"';
+            html += ' data-whatever="' + association[key].code + '"';
+            html += ' data-div-id="' + association[key].code + '-' + row + '" >';
             html += 'Edit ' + association[key].name;
             html += '</button>';
             html += '</div>';
@@ -198,5 +212,28 @@ $( document ).ready(function()
         html += '</tr>';
 
         return html;
+    }
+    
+    function updateDefinition()
+    {
+        var value = '';
+        var rows = $('.filter-row');
+        var n = rows.length;
+        for (var i = 0; i < n; i++) {
+            if (0 < i) {
+                value += 'v';
+            }
+            value += '(';
+            var cells = $(rows[i]).find('.filter-cell');
+            var n2 = cells.length;
+            for (var i2 = 0; i2 < n2; i2++) {
+                if (0 < i2) {
+                    value += '^';
+                }
+                value += $(cells[i2]).data('cell-id');
+            }
+            value += ')';
+        }
+        $('#mesd_filterbundle_filter_filterRow').val(value);
     }
 });
