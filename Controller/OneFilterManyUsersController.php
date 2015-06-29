@@ -5,7 +5,7 @@ namespace Mesd\FilterBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-use Mesd\UserBundle\Form\Type\OneFilterManyUsersType;
+use Mesd\FilterBundle\Form\Type\OneFilterManyUsersType;
 
 /**
  * One Filter Many Users controller.

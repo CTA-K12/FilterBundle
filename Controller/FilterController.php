@@ -42,6 +42,22 @@ class FilterController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
+            $filterRow = $entity->getFilterRow();
+            
+            $description = '';
+            $n = $filterRow->count();
+            for ($i = 0; $i < $n; $i++)
+            {
+                if (0 < $i) {
+                    $description .= ', ';
+                    if (($i + 1) === $n) {
+                        $description .= 'or ';
+                    }
+                }
+                $description .= '(' . $filterRow[$i]->getDescription() . ')';
+            }
+            
+            $entity->setDescription($description);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($entity);
             $entityManager->flush();
@@ -64,9 +80,10 @@ class FilterController extends Controller
      */
     private function createCreateForm(Filter $entity)
     {
-        $form = $this->createForm(new FilterType(), $entity, array(
+        $form = $this->createForm('mesd_filterbundle_filter', $entity, array(
             'action' => $this->generateUrl('filter_create'),
             'method' => 'POST',
+            'om'     => 'default',
         ));
 
         $form->add('submit', 'submit', array('label' => 'Create'));
@@ -144,9 +161,10 @@ class FilterController extends Controller
     */
     private function createEditForm(Filter $entity)
     {
-        $form = $this->createForm(new FilterType(), $entity, array(
+        $form = $this->createForm('mesd_filterbundle_filter', $entity, array(
             'action' => $this->generateUrl('filter_update', array('id' => $entity->getId())),
             'method' => 'PUT',
+            'om'     => 'default',
         ));
 
         $form->add('submit', 'submit', array('label' => 'Update'));

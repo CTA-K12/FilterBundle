@@ -2,12 +2,25 @@
 
 namespace Mesd\FilterBundle\Form;
 
+use Mesd\FilterBundle\Form\Factory\FilterCodeToRowTransformerFactory;
+use Mesd\FilterBundle\Form\Transformer\FilterCodeToRowTransformer;
+
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class FilterType extends AbstractType
 {
+    /**
+     * @var FilterCodeToRowTransformerFactory
+     */
+    private $factory;
+
+    public function __construct(FilterCodeToRowTransformerFactory $factory)
+    {
+        $this->factory = $factory;
+    }
+
     /**
      * @param FormBuilderInterface $builder
      * @param array $options
@@ -16,9 +29,27 @@ class FilterType extends AbstractType
     {
         $builder
             ->add('name')
-            ->add('description')
-            ->add('filterCategory')
-            ->add('filterRow')
+            ->add(
+                'filterCategory',
+                null,
+                array(
+                    'required' => true,
+                    'empty_value' => '',
+                )
+            )
+        ;
+        $transformer = $this->factory->create($options['om']);
+        $builder
+            ->add(
+                $builder->create(
+                    'filterRow',
+                    'text',
+                    array(
+                        'required' => true,
+                    )
+                )
+                ->addModelTransformer($transformer)
+            )
         ;
     }
     
@@ -27,9 +58,12 @@ class FilterType extends AbstractType
      */
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(array(
-            'data_class' => 'Mesd\FilterBundle\Entity\Filter'
-        ));
+        $resolver
+            ->setDefaults(array(
+                'data_class' => 'Mesd\FilterBundle\Entity\Filter'
+            ))
+            ->setRequired(array('om'))
+        ;
     }
 
     /**

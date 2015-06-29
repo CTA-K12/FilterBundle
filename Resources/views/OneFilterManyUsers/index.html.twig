@@ -1,6 +1,6 @@
 {% extends "MesdFilterBundle::layout.html.twig" %}
 
-{% block mesd_filter_content %}
+{% block body %}
     <h1>One Filter For Many Users list</h1>
 
     <table class="records_list table table-striped table-hover">
@@ -18,7 +18,7 @@
                 <td><a href="{{ path('MesdFilterBundle_onefiltermanyusers_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
                 <td>{{ entity }}</td>
                 <td>
-                    {% for user in entity.user %}{% if loop.index0 > 0 %},{% endif %}
+                    {% for user in entity.user %}{% if 0 < loop.index0 %},{% endif %}
                         {{ user }}
                     {% endfor %}
                 </td>
@@ -44,4 +44,4 @@
             </a>
         </li>
     </ul>
-{% endblock mesd_filter_content %}
+{% endblock body %}

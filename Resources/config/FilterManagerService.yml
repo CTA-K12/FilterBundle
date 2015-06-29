@@ -1,7 +1,0 @@
-parameters:
-    mesd_filter.filter_manager.class: Mesd\FilterBundle\Model\FilterManager
-
-services:
-    mesd_filter.filter_manager:
-        class: %mesd_filter.filter_manager.class%
-        arguments: [@security.context, @doctrine]

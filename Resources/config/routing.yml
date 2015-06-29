@@ -2,3 +2,10 @@ mesd_filter_filter:
     resource: "@MesdFilterBundle/Resources/config/routing/filter.yml"
     prefix:   /filter
 
+MesdFilterBundle_onefiltermanyusers:
+    resource: "@MesdFilterBundle/Resources/config/routing/onefiltermanyusers.yml"
+    prefix:   /onefiltermanyusers
+
+MesdFilterBundle_oneusermanyfilters:
+    resource: "@MesdFilterBundle/Resources/config/routing/oneusermanyfilters.yml"
+    prefix:   /oneusermanyfilters

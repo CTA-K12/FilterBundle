@@ -223,7 +223,6 @@ $( document ).ready(function()
             if (0 < i) {
                 value += 'v';
             }
-            value += '(';
             var cells = $(rows[i]).find('.filter-cell');
             var n2 = cells.length;
             for (var i2 = 0; i2 < n2; i2++) {
@@ -231,8 +230,8 @@ $( document ).ready(function()
                     value += '^';
                 }
                 value += $(cells[i2]).data('cell-id');
+                console.log($(cells[i2]));
             }
-            value += ')';
         }
         $('#mesd_filterbundle_filter_filterRow').val(value);
     }

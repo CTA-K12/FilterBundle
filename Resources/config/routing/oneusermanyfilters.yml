@@ -1,0 +1,16 @@
+MesdFilterBundle_oneusermanyfilters:
+    path:     /
+    defaults: { _controller: "MesdFilterBundle:OneUserManyFilters:index" }
+
+MesdFilterBundle_oneusermanyfilters_edit:
+    path:     /{id}/edit
+    defaults: { _controller: "MesdFilterBundle:OneUserManyFilters:edit" }
+
+MesdFilterBundle_oneusermanyfilters_show:
+    path:     /{id}/show
+    defaults: { _controller: "MesdFilterBundle:OneUserManyFilters:show" }
+
+MesdFilterBundle_oneusermanyfilters_update:
+    path:     /{id}/update
+    defaults: { _controller: "MesdFilterBundle:OneUserManyFilters:update" }
+    methods:  [POST, PUT]

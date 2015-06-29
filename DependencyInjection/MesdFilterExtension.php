@@ -47,7 +47,7 @@ class MesdFilterExtension extends Extension
 
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
-        $loader->load('FilterManagerService.yml');
+        $loader->load('services.yml');
         $container->setParameter('mesd_filter.filter_class_placeholder', $container->getParameter('mesd_filter.filter_class'));
         $container->setParameter('mesd_filter.filter_category_class_placeholder', $container->getParameter('mesd_filter.filter_category_class'));
 
