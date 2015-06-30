@@ -3,9 +3,12 @@ Mesd\FilterBundle\Entity\FilterCell:
     table: mesd_filter_cell
     repositoryClass: Mesd\FilterBundle\Repository\FilterCellRepository
     uniqueConstraints:
-        mesd_filterbundle__filter_cell__description:
+        mesd_filterbundle__filter_cell__unique__description:
             columns:
                 - description
+        mesd_filterbundle__filter_cell__unique__solvent:
+            columns:
+                - solvent
 
     fields:
         id:
@@ -17,6 +20,10 @@ Mesd\FilterBundle\Entity\FilterCell:
         description:
             type: text
             column: description
+            nullable: false
+        solvent:
+            type: text
+            column: solvent
             nullable: false
 
     manyToMany:

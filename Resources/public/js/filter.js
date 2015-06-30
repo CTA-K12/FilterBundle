@@ -73,7 +73,7 @@ $( document ).ready(function()
                 html += ' data-association-id="' + data['associations'][key].associationId + '">';
                 html += '<option></option>';
                 for (var i = 0; i < data['associations'][key].cells.length; i++) {
-                    html += '<option value="' + data['associations'][key].cells[i].id + '">';
+                    html += '<option value="' + data['associations'][key].cells[i].solvent + '">';
                     html += data['associations'][key].cells[i].description;
                     html += '</option>';
                 }
@@ -152,7 +152,7 @@ $( document ).ready(function()
                 modal.find('.new-cell option').removeAttr('selected');
                 modal.find('.modal-save').data('div-id', divId);
             });
-            
+
             $('.modal-save').on('click', function () {
                 var button = $(this);
                 var url = button.data('url');
@@ -160,16 +160,40 @@ $( document ).ready(function()
                 var form = $('#' + button.data('code') + 'Form');
                 var div = $('#' + button.data('div-id'));
                 var data = form.serializeArray();
-                $.ajax({
-                    url: url,
-                    data: data,
-                    method: 'POST'
-                }).done(function(data) {
-                    div.html(data.description);
-                    div.data('cell-id', data.id);
-                    updateDefinition();
-                    modal.modal('hide');
-                });
+                var cellJoin = $('#' + button.data('code') + '-cell-join');
+                var description = '';
+                var selectedValues = '';
+                var selectedText = cellJoin.children(':selected').text();
+                if ('Other' === selectedText) {
+                    var newCell = $('#' + button.data('code') + '-new-cell');
+                    selectedValues = newCell.val();
+                    selectedValues.sort(function (a, b)
+                    {
+                        return parseInt(a) - parseInt(b);
+                    });
+                    selectedValues = selectedValues.join('v');
+                    var selectedOptions = newCell.children('option:selected');
+                    description = '';
+                    var i = 0;
+                    var n = selectedOptions.length;
+                    selectedOptions.each(function() {
+                        if (0 < i) {
+                            description += ', ';
+                            if ((i + 1) === n) {
+                                description += 'or ';
+                            }
+                        }
+                        description += $(this).text();
+                        i++;
+                    })
+                } else {
+                    description = selectedText;
+                    selectedValues = cellJoin.val();
+                }
+                div.html(description);
+                div.data('cell-solvent', selectedValues);
+                updateDefinition();
+                modal.modal('hide');
             });
         });
     });
@@ -192,7 +216,7 @@ $( document ).ready(function()
             html += '<div';
             html += ' id="' + association[key].code + '-' + row + '"';
             html += ' class="filter-cell"';
-            html += ' data-cell-id="*">';
+            html += ' data-cell-solvent="*">';
             html += 'No ' + association[key].name + ' selected';
             html += '</div>';
             html += '<div>';
@@ -221,7 +245,7 @@ $( document ).ready(function()
         var n = rows.length;
         for (var i = 0; i < n; i++) {
             if (0 < i) {
-                value += 'v';
+                value += ')v(';
             }
             var cells = $(rows[i]).find('.filter-cell');
             var n2 = cells.length;
@@ -229,10 +253,9 @@ $( document ).ready(function()
                 if (0 < i2) {
                     value += '^';
                 }
-                value += $(cells[i2]).data('cell-id');
-                console.log($(cells[i2]));
+                value += '(' + $(cells[i2]).data('cell-solvent') + ')';
             }
         }
-        $('#mesd_filterbundle_filter_filterRow').val(value);
+        $('#mesd_filterbundle_filter_filterRow').val('(' + value + ')');
     }
 });

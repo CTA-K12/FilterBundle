@@ -3,7 +3,7 @@ Mesd\FilterBundle\Entity\FilterAssociation:
     table: mesd_filter_association
     repositoryClass: Mesd\FilterBundle\Repository\FilterAssociationRepository
     uniqueConstraints:
-        mesd_filterbundle__filter_association__name:
+        mesd_filterbundle__filter_association__unique__name:
             columns:
                 - name
 

@@ -3,10 +3,10 @@ Mesd\FilterBundle\Entity\FilterEntity:
     table: mesd_filter_entity
     repositoryClass: Mesd\FilterBundle\Repository\FilterEntityRepository
     uniqueConstraints:
-        mesd_filterbundle__filter_entity__name:
+        mesd_filterbundle__filter_entity__unique__name:
             columns:
                 - name
-        mesd_filterbundle__filter_entity__database_name:
+        mesd_filterbundle__filter_entity__unique__database_name:
             columns:
                 - database_name
     fields:

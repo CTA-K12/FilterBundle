@@ -20,6 +20,11 @@ class FilterCell
     private $description;
 
     /**
+     * @var string
+     */
+    private $solvent;
+
+    /**
      * @var \Mesd\FilterBundle\Entity\FilterAssociation
      */
     private $filterAssociation;
@@ -73,6 +78,29 @@ class FilterCell
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set solvent
+     *
+     * @param string $solvent
+     * @return FilterCell
+     */
+    public function setSolvent($solvent)
+    {
+        $this->solvent = $solvent;
+
+        return $this;
+    }
+
+    /**
+     * Get solvent
+     *
+     * @return string 
+     */
+    public function getSolvent()
+    {
+        return $this->solvent;
     }
 
     /**

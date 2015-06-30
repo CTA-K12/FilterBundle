@@ -257,7 +257,7 @@ class FilterController extends Controller
             foreach($filterCells as $filterCell)
             {
                 $cells[] = array(
-                    'id'          => $filterCell->getId(),
+                    'solvent'     => $filterCell->getSolvent(),
                     'description' => $filterCell->getDescription(),
                 );
             }
@@ -282,52 +282,6 @@ class FilterController extends Controller
             );
         }
 
-        $response = new JsonResponse();
-
-        $response->setContent(
-            json_encode($data)
-        );
-
-        return $response;
-    }
-    
-    public function createCellAction(Request $request)
-    {
-        $entityManager = $this->getDoctrine()->getManager();
-
-        $cellJoin = $request->request->get('cell-join');
-
-        if ('-1' === $cellJoin) {
-            $filterCell = new FilterCell();
-            $associationId = $request->request->get('association-id');
-            $filterAssociation = $entityManager->getRepository('MesdFilterBundle:FilterAssociation')->find($associationId);
-            $filterCell->setFilterAssociation($filterAssociation);
-            $newCell = $request->request->get('new-cell');
-            $trailEntityId = $request->request->get('trail-entity-id');
-            $filterEntity = $entityManager->getRepository('MesdFilterBundle:FilterEntity')->find($trailEntityId);
-            $entities = $entityManager->getRepository($filterEntity->getName())->findById($newCell);
-            $description = $filterAssociation->getName() . ' is ';
-            $length = count($entities);
-            for ($i = 0; $i < $length; $i++) {
-                if (0 < $i) {
-                    $description .= ', ';
-                    if ($length === ($i + 1)) {
-                        $description .= 'or ';
-                    }
-                }
-                $description .= $entities[$i]->__toString();
-            }
-            $filterCell->setDescription($description);
-            $entityManager->persist($filterCell);
-            $entityManager->flush($filterCell);
-        } else {
-            $filterCell = $entityManager->getRepository('MesdFilterBundle:FilterCell')->find($cellJoin);
-        }
-
-        $data = array(
-            'id'          => $filterCell->getId(),
-            'description' => $filterCell->getDescription(),
-        );
         $response = new JsonResponse();
 
         $response->setContent(

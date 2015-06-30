@@ -3,7 +3,7 @@ Mesd\FilterBundle\Entity\FilterRow:
     table: mesd_filter_row
     repositoryClass: Mesd\FilterBundle\Repository\FilterRowRepository
     uniqueConstraints:
-        mesd_filterbundle__filter_row__description:
+        mesd_filterbundle__filter_row__unique__description:
             columns:
                 - description
 

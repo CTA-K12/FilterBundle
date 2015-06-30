@@ -2,6 +2,8 @@
 
 namespace Mesd\FilterBundle\Model;
 
+use Mesd\FilterBundle\Exception\MissingFilterException;
+
 class FilterManager {
 
     private $securityContext;
@@ -13,69 +15,6 @@ class FilterManager {
     {
         $this->securityContext = $securityContext;
         $this->objectManager   = $objectManager->getManager();
-    }
-
-    public function applyFilters($queryBuilder, $filtersToApply)
-    {
-        $user = $this->securityContext->getToken()->getUser();
-        foreach ($this->bypassRoles as $bypassRole) {
-            if ($this->securityContext->isGranted($bypassRole)) {
-
-                return $queryBuilder;
-            }
-        }
-
-        $filters = $user->getFilter();
-        $sortedCategories = array();
-
-        foreach ($filters as $filter) {
-            $category = $filter->getFilterCategory()->getName();
-            if (in_array($category, $filtersToApply)) {
-                if (array_key_exists($category, $sortedCategories)) {
-                    $sortedCategories[$category][] = $filter;
-                } else {
-                    $sortedCategories[$category] = array($filter);
-                }
-            }
-        }
-
-        if ((0 === count($filters)) || (count($filtersToApply) != count($sortedCategories))) {
-            $queryBuilder->andWhere('1 = 0');
-
-            return $queryBuilder;
-        }
-
-        $alias = $queryBuilder->getRootAlias();
-
-        foreach ($sortedCategories as $sortedFilters) {
-            $details = array();
-            foreach ($sortedFilters as $filter) {
-                $solventWrappers = $filter->getSolventWrappers();
-                $detail = $this->getDetail($solventWrappers, $alias);
-                $details[] = $detail;
-            }
-            $detail = '(' . implode(' OR ', $details) . ')';
-            $queryBuilder = $this->applyFilter($queryBuilder, $solventWrappers[0], $detail);
-        }
-
-        return $queryBuilder;
-    }
-
-    protected function getDetail($solventWrappers, $alias) {
-        $details = array();
-        foreach ($solventWrappers as $solventWrapper) {
-            $details[] = $solventWrapper->getDetails($alias);
-        }
-        $detail = '(' . implode(' OR ', $details) . ')';
-
-        return $detail;
-    }
-
-    protected function applyFilter($queryBuilder, $solventWrapper, $detail)
-    {
-        $queryBuilder = $solventWrapper->applyToQueryBuilder($queryBuilder, $detail);
-
-        return $queryBuilder;
     }
 
     public function setBypassRoles( $bypassRoles )
@@ -100,6 +39,130 @@ class FilterManager {
     public function getConfig()
     {
         return $this->config;
+    }
+
+    public function applyFilters($queryBuilder, $filtersToApply)
+    {
+        $user = $this->securityContext->getToken()->getUser();
+        foreach ($this->bypassRoles as $bypassRole) {
+            if ($this->securityContext->isGranted($bypassRole)) {
+
+                return $queryBuilder;
+            }
+        }
+
+        $filters = $user->getFilter();
+        
+        if (0 === count($filters)) {
+
+            throw new MissingFilterException('Missing Filters');
+        }
+
+        $filtersByCategory = $this->sortFiltersByCategory($filtersToApply, $filters);
+
+        if (count($filtersToApply) != count($filtersByCategory)) {
+
+            throw new MissingFilterException('Missing Filters');
+        }
+
+print_r($queryBuilder->getQuery()->getDQL());
+print_r('<hr />');
+        $queryBuilder = $this->applySortedFilters($queryBuilder, $filtersByCategory);
+print_r($queryBuilder->getQuery()->getDQL());
+print_r('<hr />');
+
+/*
+        foreach ($filtersByCategory as $sortedFilters) {
+            $details = array();
+            foreach ($sortedFilters as $filter) {
+                var_dump(get_class($filter));
+                $solventWrappers = $filter->getSolventWrappers();
+                $detail = $this->getDetail($solventWrappers, $alias);
+                $details[] = $detail;
+            }
+            $detail = '(' . implode(' OR ', $details) . ')';
+            $queryBuilder = $this->applyFilter($queryBuilder, $solventWrappers[0], $detail);
+        }
+*/
+die;
+
+        return $queryBuilder;
+    }
+    
+    protected function sortFiltersByCategory($filtersToApply, $filters) {
+        $filtersByCategory = array();
+        foreach ($filters as $filter) {
+            $category = $filter->getFilterCategory()->getName();
+            if(in_array($category, $filtersToApply)) {
+                if (array_key_exists($category, $filtersByCategory)) {
+                    $filtersByCategory[$category][] = $filter;
+                } else {
+                    $filtersByCategory[$category] = array($filter);
+                }
+            }
+        }
+
+        return $filtersByCategory;
+    }
+    
+    protected function applySortedFilters($queryBuilder, $filtersByCategory)
+    {
+        $rootAlias = $queryBuilder->getRootAlias();
+        var_dump($rootAlias);
+        
+        $entityNames = array();
+        
+        foreach ($filtersByCategory as $filters) {
+            $category = $filters[0]->getFilterCategory();
+            $mainAlias = $category->getFilterEntity()->getDatabaseName();
+            if ($rootAlias !== $mainAlias) {
+
+                throw new MisappliedFilter('filter entity does not match querybuilder alias');
+            }
+            $categoryId = $category->getId();
+            foreach ($category->getFilterAssociation() as $association) {
+                var_dump($association->getName());
+                $explodedTrail = explode('->', $association->getTrail());
+                var_dump($explodedTrail);
+                $alias = $mainAlias;
+                foreach ($explodedTrail as $nextAlias) {
+                    $newAlias = $nextAlias . $categoryId;
+                    $queryBuilder->join($alias . '.' . $nextAlias, $newAlias);
+                    $alias = $newAlias;
+                }
+            }
+            foreach ($filters as $filter) {
+                foreach ($filter->getFilterRow() as $row) {
+                    var_dump($row->getDescription());
+                    foreach ($row->getFilterCell() as $cell) {
+                        var_dump($cell->getDescription());
+                        $association = $cell->getFilterAssociation();
+                        var_dump($association->getName());
+                        var_dump($association->getTrailEntity()->getDatabaseName());
+                    }
+                }
+            }
+        }
+
+        return $queryBuilder;
+    }
+
+/*
+    protected function getDetail($solventWrappers, $alias) {
+        $details = array();
+        foreach ($solventWrappers as $solventWrapper) {
+            $details[] = $solventWrapper->getDetails($alias);
+        }
+        $detail = '(' . implode(' OR ', $details) . ')';
+
+        return $detail;
+    }
+
+    protected function applyFilter($queryBuilder, $solventWrapper, $detail)
+    {
+        $queryBuilder = $solventWrapper->applyToQueryBuilder($queryBuilder, $detail);
+
+        return $queryBuilder;
     }
 
     public function getAsArray($filters, $metadataFactory)
@@ -182,4 +245,5 @@ class FilterManager {
 
         return $entityLists;
     }
+    */
 }
