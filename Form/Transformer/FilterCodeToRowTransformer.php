@@ -50,11 +50,15 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
      */
     public function reverseTransform($solvent)
     {
+        var_dump($solvent);
         $filterRows = new ArrayCollection();
-        $rows = explode('v', $solvent);
+        $rows = explode(')v(', substr($solvent, 1, -1));
+        var_dump($rows);
         foreach ($rows as $row) {
             $filterRow = new FilterRow();
-            $cells = explode('^', $row);
+            var_dump($row);
+            $cells = explode(')^(', substr($row, 1, -1));
+            var_dump($cells);
             $i = 0;
             $description = '';
             $n = count($cells);
@@ -64,16 +68,21 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                 }
             }
             foreach ($cells as $cell) {
+                var_dump($cell);
                 if ('*' !== $cell) {
+                    $joins = explode('v', $cell);
+                    var_dump($joins);
+                    sort($joins, SORT_NUMERIC);
+                    var_dump($joins);
+                    $sortedCell = implode('v', $joins);
+                    var_dump($sortedCell);
                     $filterCell = $this->entityManager
                         ->getRepository('MesdFilterBundle:FilterCell')
-                        ->find($cell)
+                        ->findOneBySolvent($sortedCell)
                     ;
                     if (null === $filterCell) {
-                        throw new TransformationFailedException(sprintf(
-                            'An cell with id "%s" does not exist!',
-                            $cell
-                        ));
+                        $filterCell = new FilterCell();
+                        $filterCell->setSolvent($sortedCell);
                     }
 
                     $filterRow->addFilterCell($filterCell);
@@ -97,6 +106,7 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
             $filterRows->add($filterRow);
             $this->entityManager->persist($filterRow);
         }
+        die;
 
         return $filterRows;
     }

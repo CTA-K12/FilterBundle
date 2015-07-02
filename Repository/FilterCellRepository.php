@@ -12,4 +12,8 @@ use Doctrine\ORM\EntityRepository;
  */
 class FilterCellRepository extends EntityRepository
 {
+    public function getBySolvent($solvent)
+    {
+        
+    }
 }

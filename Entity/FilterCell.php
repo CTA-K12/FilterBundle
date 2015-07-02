@@ -20,7 +20,7 @@ class FilterCell
     private $description;
 
     /**
-     * @var string
+     * @var array
      */
     private $solvent;
 
@@ -83,7 +83,7 @@ class FilterCell
     /**
      * Set solvent
      *
-     * @param string $solvent
+     * @param array $solvent
      * @return FilterCell
      */
     public function setSolvent($solvent)
@@ -96,7 +96,7 @@ class FilterCell
     /**
      * Get solvent
      *
-     * @return string 
+     * @return array 
      */
     public function getSolvent()
     {

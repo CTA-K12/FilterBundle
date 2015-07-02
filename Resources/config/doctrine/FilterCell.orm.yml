@@ -6,9 +6,10 @@ Mesd\FilterBundle\Entity\FilterCell:
         mesd_filterbundle__filter_cell__unique__description:
             columns:
                 - description
-        mesd_filterbundle__filter_cell__unique__solvent:
+        mesd_filterbundle__filter_cell__unique__solvent__filter_association_id:
             columns:
                 - solvent
+                - filter_association_id
 
     fields:
         id:
@@ -22,7 +23,7 @@ Mesd\FilterBundle\Entity\FilterCell:
             column: description
             nullable: false
         solvent:
-            type: text
+            type: json_array
             column: solvent
             nullable: false
 
