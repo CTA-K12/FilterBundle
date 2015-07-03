@@ -12,8 +12,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class FilterCellRepository extends EntityRepository
 {
-    public function getBySolvent($solvent)
+    public function getBySolventAndAssociation($solvent, $associationId)
     {
+        $queryBuilder = $this->createQueryBuilder('filterCell');
+        $queryBuilder->join(
+            'filterCell.filterAssociation',
+            'filterAssociation',
+            'WITH',
+            $queryBuilder->expr()->andX(
+                $queryBuilder->expr()->eq('filterAssociation.id', ':associationId'),
+                $queryBuilder->expr()->eq('filterCell.solvent', ':solvent')
+            )
+        )->setParameter('associationId', $associationId)
+        ->setParameter('solvent', ':solvent');
         
+        return $queryBuilder;
     }
 }

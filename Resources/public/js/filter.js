@@ -196,7 +196,7 @@ $( document ).ready(function()
                     selectedValuesString = cellJoin.val();
                 }
                 div.html(description);
-                div.data('cell-solvent', selectedValuesString);
+                div.attr('data-cell-solvent', selectedValuesString);
                 updateDefinition();
                 modal.modal('hide');
             });

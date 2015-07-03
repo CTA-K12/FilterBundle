@@ -6,6 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 
 use Mesd\FilterBundle\Entity\FilterRow;
+use Mesd\FilterBundle\Entity\FilterCell;
+use Mesd\FilterBundle\Exception\DuplicateFilterCellException;
 
 use Symfony\Component\Form\DataTransformerInterface;
 use Symfony\Component\Form\Exception\TransformationFailedException;
@@ -48,9 +50,64 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
      *
      * @throws TransformationFailedException if object (issue) is not found.
      */
-    public function reverseTransform($solvent)
+    public function reverseTransform($filterSolvent)
     {
-        var_dump($solvent);
+        $rows = json_decode($filterSolvent);
+        $associations = array();
+        foreach ($rows as $cells) {
+            foreach ($cells as $cell) {
+                if (!array_key_exists($cell->associationId, $associations)) {
+                    $association = $this->entityManager
+                        ->getRepository('MesdFilterBundle:FilterAssociation')
+                        ->find($cell->associationId)
+                    ;
+                    $associations[$cell->associationId] = $association;
+                }
+            }
+        }
+        foreach ($rows as $cells) {
+            $cellSolvents = array();
+            foreach ($cells as $cell) {
+                sort($cell->solvent, SORT_NUMERIC);
+                $cellSolvent = json_encode($cell->solvent);
+                $cellSolvents[] = $cell->associationId . $cellSolvent;
+                $result = $this->entityManager
+                    ->getRepository('MesdFilterBundle:FilterCell')
+                    ->getBySolventAndAssociation(
+                        $cellSolvent,
+                        $cell->associationId
+                    )->getQuery()
+                    ->getResult()
+                ;
+                $n = count($result);
+                if (0 === $n) {
+                    $filterCell = new FilterCell();
+                    $filterCell->setFilterAssociation(
+                        $associations[$cell->associationId]
+                    );
+                    $filterCell->setSolvent($cell->solvent);
+                    $this->entityManager->persist($filterCell);
+                } elseif (1 === $n) {
+                    $filterCell = $result[0];
+                } else {
+                    throw new DuplicateFilterCellException(
+                        'there is a duplicate filter cell with solvent '
+                        . $cellSolvent . ' and association '
+                        . $cell->associationId
+                    );
+                }
+            }
+            print_r('<pre>');
+            print_r('<hr />');
+            print_r($cellSolvents);
+            sort($cellSolvents);
+            print_r($cellSolvents);
+            print_r('<hr />');
+            print_r('</pre>');
+        }
+        
+        die;
+        /*
         $filterRows = new ArrayCollection();
         $rows = explode(')v(', substr($solvent, 1, -1));
         var_dump($rows);
@@ -109,5 +166,6 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
         die;
 
         return $filterRows;
+        */
     }
 }
