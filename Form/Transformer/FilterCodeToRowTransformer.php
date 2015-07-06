@@ -110,9 +110,9 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                     $resultCount = count($result);
                     if (0 === $resultCount) {
                         $filterCell = new FilterCell();
+                        $association = $associations[$cell->associationId];
                         $filterCell->setFilterAssociation($association);
                         $filterCell->setSolvent($cell->solvent);
-                        $association = $associations[$cell->associationId];
                         $trailEntity = $association->getTrailEntity();
                         $results = $this->entityManager
                             ->getRepository($trailEntity->getName())
