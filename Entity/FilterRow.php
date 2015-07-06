@@ -20,6 +20,11 @@ class FilterRow
     private $description;
 
     /**
+     * @var array
+     */
+    private $solvent;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $filter;
@@ -74,6 +79,29 @@ class FilterRow
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set solvent
+     *
+     * @param array $solvent
+     * @return FilterRow
+     */
+    public function setSolvent($solvent)
+    {
+        $this->solvent = $solvent;
+
+        return $this;
+    }
+
+    /**
+     * Get solvent
+     *
+     * @return array 
+     */
+    public function getSolvent()
+    {
+        return $this->solvent;
     }
 
     /**

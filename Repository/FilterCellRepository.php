@@ -24,7 +24,7 @@ class FilterCellRepository extends EntityRepository
                 $queryBuilder->expr()->eq('filterCell.solvent', ':solvent')
             )
         )->setParameter('associationId', $associationId)
-        ->setParameter('solvent', ':solvent');
+        ->setParameter('solvent', $solvent);
         
         return $queryBuilder;
     }

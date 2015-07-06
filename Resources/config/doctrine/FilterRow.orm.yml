@@ -18,6 +18,10 @@ Mesd\FilterBundle\Entity\FilterRow:
             type: text
             column: description
             nullable: false
+        solvent:
+            type: json_array
+            column: solvent
+            nullable: false
 
     manyToMany:
         filter:

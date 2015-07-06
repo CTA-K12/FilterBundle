@@ -12,4 +12,15 @@ use Doctrine\ORM\EntityRepository;
  */
 class FilterRowRepository extends EntityRepository
 {
+    public function getBySolvent($solvent)
+    {
+        $queryBuilder = $this->createQueryBuilder('filterRow');
+        $queryBuilder->where(
+            $queryBuilder->expr()->andX(
+                $queryBuilder->expr()->eq('filterRow.solvent', ':solvent')
+            )
+        )->setParameter('solvent', $solvent);
+        
+        return $queryBuilder;
+    }
 }
