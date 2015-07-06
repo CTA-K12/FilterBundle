@@ -1,9 +1,59 @@
 {% extends 'MesdFilterBundle::layout.html.twig' %}
 
+{% form_theme form 'MesdFilterBundle:Form:fields.html.twig' %}
+
 {% block body -%}
     <h1>Filter edit</h1>
 
-    {{ form(edit_form) }}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    <div class="form-group">
+        {{
+            form_label(
+                form.filterCategory
+            )
+        }}
+        {{
+            form_widget(
+                form.filterCategory,
+                {
+                    'attr': {
+                        'data-url': url(
+                            'MesdUserBundle_filter_category_data',
+                            {
+                                'id': -1,
+                            }
+                        )
+                    }
+                }
+            )
+        }}
+        {{
+            form_errors(
+                form.filterCategory
+            )
+        }}
+    </div>
+    <div class="form-group">
+        {{
+            form_label(
+                form.filterRow,
+                'Filter Definition'
+            )
+        }}
+        {{
+            form_widget(
+                form.filterRow
+            )
+        }}
+        {{
+            form_errors(
+                form.filterRow
+            )
+        }}
+    </div>
+    {{ form_rest(form) }}
+    {{ form_end(form) }}
 
         <ul class="record_actions">
     <li>

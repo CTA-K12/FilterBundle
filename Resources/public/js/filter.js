@@ -4,7 +4,7 @@ $( document ).ready(function()
 {
     $('#mesd_filterbundle_filter_filterCategory').on('change', function()
     {
-        var url = $(this).data('url');
+        var url = $(this).attr('data-url');
         url = url.replace('-1', $(this).val());
         $.ajax({
             url: url
@@ -73,7 +73,7 @@ $( document ).ready(function()
                 html += ' data-association-id="' + data['associations'][key].associationId + '">';
                 html += '<option></option>';
                 for (var i = 0; i < data['associations'][key].cells.length; i++) {
-                    html += '<option value="' + data['associations'][key].cells[i].solvent + '">';
+                    html += '<option value="' + JSON.stringify(data['associations'][key].cells[i].solvent) + '">';
                     html += data['associations'][key].cells[i].description;
                     html += '</option>';
                 }
@@ -130,8 +130,8 @@ $( document ).ready(function()
                 var table = $('#filter-interface-table');
                 table.append(
                     html
-                )
-                table.data('rows', table.data('rows') + 1);
+                );
+                table.attr('data-rows', table.attr('data-rows') + 1);
             });
             
             $('.change-cell-dropdown').on('change', function () {
@@ -147,26 +147,26 @@ $( document ).ready(function()
 
             $('.modal').on('show.bs.modal', function (event) {
                 var button = $(event.relatedTarget);
-                var divId = button.data('div-id');
+                var divId = button.attr('data-div-id');
                 var modal = $(this);
                 modal.find('.new-cell option').removeAttr('selected');
-                modal.find('.modal-save').data('div-id', divId);
+                modal.find('.modal-save').attr('data-div-id', divId);
             });
 
             $('.modal-save').on('click', function () {
                 var button = $(this);
-                var url = button.data('url');
-                var modal = $('#' + button.data('code') + 'Modal');
-                var form = $('#' + button.data('code') + 'Form');
-                var div = $('#' + button.data('div-id'));
-                var associationId = div.data('association-id');
+                var url = button.attr('data-url');
+                var modal = $('#' + button.attr('data-code') + 'Modal');
+                var form = $('#' + button.attr('data-code') + 'Form');
+                var div = $('#' + button.attr('data-div-id'));
+                var associationId = div.attr('data-association-id');
                 var data = form.serializeArray();
-                var cellJoin = $('#' + button.data('code') + '-cell-join');
+                var cellJoin = $('#' + button.attr('data-code') + '-cell-join');
                 var description = '';
                 var selectedValues = '';
                 var selectedText = cellJoin.children(':selected').text();
                 if ('Other' === selectedText) {
-                    var newCell = $('#' + button.data('code') + '-new-cell');
+                    var newCell = $('#' + button.attr('data-code') + '-new-cell');
                     selectedValues = newCell.val();
                     n = selectedValues.length;
                     for (var i = 0; i < n; i++) {
@@ -190,7 +190,7 @@ $( document ).ready(function()
                         }
                         description += $(this).text();
                         i++;
-                    })
+                    });
                 } else {
                     description = selectedText;
                     selectedValuesString = cellJoin.val();
@@ -213,7 +213,7 @@ $( document ).ready(function()
             if (0 < i) {
                 html += '<td>AND</td>';
             }
-            var row = $('#filter-interface-table').data('rows');
+            var row = $('#filter-interface-table').attr('data-rows');
             if (undefined === row) {
                 row = 0;
             }
@@ -255,7 +255,7 @@ $( document ).ready(function()
             for (var i2 = 0; i2 < n2; i2++) {
                 var cell = $(cells[i2]);
                 var solvent = JSON.parse(cell.attr('data-cell-solvent'));
-                var associationId = cell.data('association-id');
+                var associationId = cell.attr('data-association-id');
                 var json = {
                     associationId: associationId,
                     solvent: solvent
@@ -264,7 +264,9 @@ $( document ).ready(function()
             }
             rowSolvent.push(cellSolvent);
         }
+        console.log('test');
         var value = JSON.stringify(rowSolvent);
+        console.log('here');
         $('#mesd_filterbundle_filter_filterRow').val(value);
     }
 });
