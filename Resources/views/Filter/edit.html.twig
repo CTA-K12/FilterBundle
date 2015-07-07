@@ -23,7 +23,7 @@
                             {
                                 'id': -1,
                             }
-                        )
+                        ),
                     }
                 }
             )
@@ -43,7 +43,12 @@
         }}
         {{
             form_widget(
-                form.filterRow
+                form.filterRow,
+                {
+                    'attr': {
+                        'class': 'hidden',
+                    }
+                }
             )
         }}
         {{

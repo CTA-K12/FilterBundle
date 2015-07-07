@@ -43,7 +43,7 @@ class FilterType extends AbstractType
             ->add(
                 $builder->create(
                     'filterRow',
-                    'text',
+                    'textarea',
                     array(
                         'required' => true,
                     )

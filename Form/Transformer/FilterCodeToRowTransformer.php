@@ -39,13 +39,8 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
 
             return '';
         }
-        
-        foreach ($filterRow as $row) {
-            var_dump($row->getSolvent());
-        }
-        die();
 
-        return '';
+        return $filterRow;
     }
 
     /**

@@ -22,42 +22,64 @@
 {%- endblock form_label -%}
 
 {% block _mesd_filterbundle_filter_filterRow_widget %}
-    {%- set type = type|default('text') -%}
-    <input type="{{ type }}" {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
-    {% if entity is defined %}
-    <div id="filter-interface">
-        <table class="table table-striped table-bordered table-hover table-responsive">
-            <tr>
-                <th>Gig Band</th>
-                <th></th>
-                <th>Gig Venue</th>
-            </tr>
-            <tr>
-                <td>Awesome Agencies, or Fantastic Forms</td>
-                <td>AND</td>
-                <td>The Garage, The Dive Bar, or Bar None</td>
-            </tr>
-            <tr>
-                <td colspan="3">OR</td>
-            </tr>
-            <tr>
-                <td>Beautiful Billings</td>
-                <td>AND</td>
-                <td></td>
-            </tr>
-            <tr>
-                <td colspan="3">OR</td>
-            </tr>
-            <tr>
-                <td></td>
-                <td>AND</td>
-                <td>Comet Cash</td>
-            </tr>
-        </table>
-    </div>
+    <textarea {{ block('widget_attributes') }}>{% for filterRow in value %}{% if not loop.first %},{% endif %}[{% for solvent in filterRow.solvent %}{% if not loop.first %},{% endif %}[{{ '{"associationId":"' ~ solvent.associationId ~ '","solvent":['}}{% for id in solvent.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}{{']}' }}]{% endfor %}]{% endfor %}</textarea>
+    {% if value is not empty %}
+        <div id="filter-interface">
+            <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}">
+                <tbody>
+                    <tr>
+                        {% set associations = form.vars.value.owner.filterCategory.filterAssociation %}
+                        {% for association in associations %}
+                            {% if not loop.first %}
+                                <th></th>
+                            {% endif %}
+                            <th>{{ association.name }}</th>
+                        {% endfor %}
+                    </tr>
+                    {% set row = 0 %}
+                    {% for filterRow in value %}
+                        {% if not loop.first %}
+                            <tr>
+                                <td colspan="3">OR</td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            {% set n = associations | length %}
+                            {% for i in 0..(n-1) %}
+                                {% if not loop.first %}
+                                    <td>AND</td>
+                                {% endif %}
+                                {% set found = false %}
+                                {% for filterCell in filterRow.filterCell %}
+                                    {% if filterCell.filterAssociation.id == associations[i].id %}
+                                        {% set found = true %}
+                                        <td>
+                                            <div id="" class="filter-cell" data-cell-solvent="[{% for id in filterCell.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}]" data-association-id="{{ associations[i].id }}">{{ filterCell.description }}</div>
+                                            <div>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-div-id="{{ associations[i].name | lower | replace({' ' : '-' })}}-{{ row }}">Edit {{ associations[i].name }}</button>
+                                                
+                                            </div>
+                                        </td>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if not found %}
+                                <td>
+                                    <div id="" class="filter-cell" data-cell-solvent="[-1]" data-association-id="{{ associations[i].id }}">No {{ associations[i].name }} selected</div>
+                                    <div>
+                                        <button type="button" class="btn btn-default" data-toggle="modal" data-div-id="{{ associations[i].name | lower | replace({' ' : '-' })}}-{{ row }}">Edit {{ associations[i].name }}</button>
+                                    </div>
+                                </td>
+                                {% endif %}
+                            {% endfor %}
+                        </tr>
+                        {% set row = row + 1 %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     {% else %}
         <div id="filter-interface">
-            Please select a FIlter Category.
+            Please select a Filter Category.
         </div>
     {% endif %}
 {% endblock %}

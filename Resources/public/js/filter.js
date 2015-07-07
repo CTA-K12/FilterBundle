@@ -13,6 +13,7 @@ $( document ).ready(function()
             html += ' id="filter-interface-table"';
             html += ' class="table table-striped table-bordered table-hover table-responsive"';
             html += ' data-rows="1">';
+            html += '<tbody>';
             html += '<tr>';
             var i = 0;
             for (var key in data['associations']) {
@@ -24,6 +25,7 @@ $( document ).ready(function()
             }
             html += '</tr>';
             html += addRow(data['associations']);
+            html += '</tbody>';
             html += '</table>';
             if (1 < i) {
                 html += '<a id="filter-row-add" class="btn btn-default" href="#">';
@@ -131,7 +133,6 @@ $( document ).ready(function()
                 table.append(
                     html
                 );
-                table.attr('data-rows', table.attr('data-rows') + 1);
             });
             
             $('.change-cell-dropdown').on('change', function () {
@@ -209,13 +210,13 @@ $( document ).ready(function()
         html += '<tr';
         html += ' class="filter-row">';
         var i = 0;
+        var row = $('#filter-interface-table').attr('data-rows');
+        if (undefined === row) {
+            row = 0;
+        }
         for (var key in association) {
             if (0 < i) {
                 html += '<td>AND</td>';
-            }
-            var row = $('#filter-interface-table').attr('data-rows');
-            if (undefined === row) {
-                row = 0;
             }
             html += '<td>';
             html += '<div';
@@ -230,14 +231,14 @@ $( document ).ready(function()
             html += ' type="button"';
             html += ' class="btn btn-default"';
             html += ' data-toggle="modal"';
-            html += ' data-target="#' + association[key].code + 'Modal"';
             html += ' data-div-id="' + association[key].code + '-' + row + '" >';
             html += 'Edit ' + association[key].name;
             html += '</button>';
             html += '</div>';
-            html +='</td>';
+            html += '</td>';
             i++;
         }
+        $('#filter-interface-table').attr('data-rows', parseInt(row) + 1);
         html += '</tr>';
 
         return html;
@@ -264,9 +265,7 @@ $( document ).ready(function()
             }
             rowSolvent.push(cellSolvent);
         }
-        console.log('test');
         var value = JSON.stringify(rowSolvent);
-        console.log('here');
         $('#mesd_filterbundle_filter_filterRow').val(value);
     }
 });
