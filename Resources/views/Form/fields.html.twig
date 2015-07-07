@@ -25,10 +25,12 @@
     <textarea {{ block('widget_attributes') }}>{% for filterRow in value %}{% if not loop.first %},{% endif %}[{% for solvent in filterRow.solvent %}{% if not loop.first %},{% endif %}[{{ '{"associationId":"' ~ solvent.associationId ~ '","solvent":['}}{% for id in solvent.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}{{']}' }}]{% endfor %}]{% endfor %}</textarea>
     {% if value is not empty %}
         <div id="filter-interface">
+            Loading...
             <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}">
                 <tbody>
                     <tr>
                         {% set associations = form.vars.value.owner.filterCategory.filterAssociation %}
+                        {% set n = associations | length %}
                         {% for association in associations %}
                             {% if not loop.first %}
                                 <th></th>
@@ -40,11 +42,10 @@
                     {% for filterRow in value %}
                         {% if not loop.first %}
                             <tr>
-                                <td colspan="3">OR</td>
+                                <td colspan="{{ (n * 2) - 1 }}">OR</td>
                             </tr>
                         {% endif %}
                         <tr>
-                            {% set n = associations | length %}
                             {% for i in 0..(n-1) %}
                                 {% if not loop.first %}
                                     <td>AND</td>
