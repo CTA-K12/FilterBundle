@@ -43,6 +43,8 @@ Mesd\FilterBundle\Entity\FilterCategory:
         filterEntity:
             targetEntity: FilterEntity
             inversedBy: filterCategory
+            joinColumn:
+                name: filter_entity_id
 
     oneToMany:
         filter:

@@ -36,3 +36,5 @@ Mesd\FilterBundle\Entity\FilterCell:
         filterAssociation:
             targetEntity: FilterAssociation
             inversedBy: filterCell
+            joinColumn:
+                name: filter_association_id
