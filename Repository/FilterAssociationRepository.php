@@ -12,4 +12,20 @@ use Doctrine\ORM\EntityRepository;
  */
 class FilterAssociationRepository extends EntityRepository
 {
+    public function getCategoryAssociation($categoryName, $associationName)
+    {
+        $queryBuilder = $this->createQueryBuilder('association');
+        $queryBuilder->join(
+            'association.filterCategory',
+            'category',
+            'WITH',
+            $queryBuilder->expr()->andX(
+                $queryBuilder->expr()->eq('category.name', ':categoryName'),
+                $queryBuilder->expr()->eq('association.name', ':associationName')
+            )
+        )->setParameter('categoryName', $categoryName)
+        ->setParameter('associationName', $associationName);
+        
+        return $queryBuilder;
+    }
 }

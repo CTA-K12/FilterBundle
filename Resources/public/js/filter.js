@@ -1,7 +1,7 @@
-'use strict';
 
-$( document ).ready(function()
+$(document).ready(function ()
 {
+    'use strict';
     var solvent = $('#mesd_filterbundle_filter_filterRow').val();
     if ('' !== solvent) {
         console.log(solvent);
@@ -9,7 +9,7 @@ $( document ).ready(function()
         console.log(solvent);
     }
 
-    $('#mesd_filterbundle_filter_filterCategory').on('change', function()
+    $('#mesd_filterbundle_filter_filterCategory').on('change', function ()
     {
         var url = $(this).attr('data-url');
         url = url.replace('-1', $(this).val());
@@ -76,7 +76,7 @@ $( document ).ready(function()
             html += ' name="new-cell[]"';
             html += ' class="form-control new-cell"';
             html += ' multiple="multiple">';
-            for (var i = 0; i < associations[key].values.length; i++) {
+            for (i = 0; i < associations[key].values.length; i++) {
                 html += '<option value="' + associations[key].values[i].id + '">';
                 html += associations[key].values[i].name;
                 html += '</option>';
@@ -118,15 +118,15 @@ $( document ).ready(function()
         html += '<tbody>';
         html += '<tr>';
         var i = 0;
-        for (var key in data['associations']) {
+        for (var key in data.associations) {
             if (0 < i) {
                 html += '<th></th>';
             }
-            html += '<th>' + data['associations'][key].name + '</th>'
+            html += '<th>' + data.associations[key].name + '</th>';
             i++;
         }
         html += '</tr>';
-        html += addRow(data['associations']);
+        html += addRow(data.associations);
         html += '</tbody>';
         html += '</table>';
         if (1 < i) {
@@ -137,13 +137,13 @@ $( document ).ready(function()
         $('#filter-interface').html(
             html
         );
-        loadModals(data['associations']);
+        loadModals(data.associations);
         $('#filter-row-add').on('click', function () {
             var html = '';
             html += '<tr>';
-            html += '<td colspan="' + ((data['associations'].length * 2) - 1) + '">OR</td>';
+            html += '<td colspan="' + ((data.associations.length * 2) - 1) + '">OR</td>';
             html += '</tr>';
-            html += addRow(data['associations']);
+            html += addRow(data.associations);
             var table = $('#filter-interface-table');
             table.append(
                 html
@@ -179,6 +179,7 @@ $( document ).ready(function()
             var cellJoin = $('#' + button.attr('data-code') + '-cell-join');
             var description = '';
             var selectedValues = '';
+            var selectedValuesString = '';
             var selectedText = cellJoin.children(':selected').text();
             if ('Other' === selectedText) {
                 var newCell = $('#' + button.attr('data-code') + '-new-cell');
@@ -191,10 +192,10 @@ $( document ).ready(function()
                 {
                     return a - b;
                 });
-                var selectedValuesString = JSON.stringify(selectedValues);
+                selectedValuesString = JSON.stringify(selectedValues);
                 var selectedOptions = newCell.children('option:selected');
                 description = '';
-                var i = 0;
+                i = 0;
                 var n = selectedOptions.length;
                 selectedOptions.each(function() {
                     if (0 < i) {
