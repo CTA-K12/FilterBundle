@@ -82,6 +82,73 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                 $filterRow = new FilterRow();
                 $filterRow->setSolvent($cells);
                 $this->entityManager->persist($filterRow);
+                $rowDescription = '';
+                $rowDescriptionIndex = 0;
+                $rowDescriptionCount = 0;
+                foreach ($cells as $cell) {
+                    if (-1 < $cell->solvent[0]) {
+                        $rowDescriptionCount++;
+                    }
+                }
+                foreach ($cells as $cell) {
+                    if (-1 < $cell->solvent[0]) {
+                        $existingCells = $filterRow->getFilterCell();
+                        sort($cell->solvent);
+                        $result = $this->entityManager
+                            ->getRepository('MesdFilterBundle:FilterCell')
+                            ->getBySolventAndAssociation(
+                                json_encode($cell->solvent),
+                                $cell->associationId
+                            )->getQuery()
+                            ->getResult()
+                        ;
+                        $resultCount = count($result);
+                        $cellDescription = '';
+                        if (0 === $resultCount) {
+                            $filterCell = new FilterCell();
+                            $association = $associations[$cell->associationId];
+                            $filterCell->setFilterAssociation($association);
+                            $filterCell->setSolvent($cell->solvent);
+                            $trailEntity = $association->getTrailEntity();
+                            $results = $this->entityManager
+                                ->getRepository($trailEntity->getName())
+                                ->findById($cell->solvent)
+                            ;
+                            $cellDescriptionIndex = 0;
+                            $cellDescriptionCount = count($results);
+                            foreach ($results as $result) {
+                                if (0 < $cellDescriptionIndex) {
+                                    $cellDescription .= ', ';
+                                    if (($cellDescriptionCount - 1) === $cellDescriptionIndex) {
+                                        $cellDescription .= 'or ';
+                                    }
+                                }
+                                $cellDescription .= $result->__toString();
+                                $cellDescriptionIndex++;
+                            }
+                            $filterCell->setDescription($cellDescription);
+                            $this->entityManager->persist($filterCell);
+                        } elseif (1 === $resultCount) {
+                            $filterCell = $result[0];
+                        } else {
+                            throw new DuplicateFilterCellException(
+                                'there is a duplicate filter cell with solvent '
+                                . $cell->solvent . ' and association '
+                                . $cell->associationId
+                            );
+                        }
+                        $filterRow->addFilterCell($filterCell);
+                        if (0 < $rowDescriptionIndex) {
+                            $rowDescription .= ', ';
+                            if (($rowDescriptionCount - 1) === $rowDescriptionIndex) {
+                                $rowDescription .= 'and ';
+                            }
+                        }
+                        $rowDescription .= '(' . $cellDescription . ')';
+                        $rowDescriptionIndex++;
+                    }
+                }
+                $filterRow->setDescription($rowDescription);
             } elseif (1 === $resultCount) {
                 $filterRow = $result[0];
             } else {
@@ -90,72 +157,6 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                     . $cells
                 );
             }
-            $rowDescription = '';
-            $rowDescriptionIndex = 0;
-            $rowDescriptionCount = 0;
-            foreach ($cells as $cell) {
-                if (-1 < $cell->solvent[0]) {
-                    $rowDescriptionCount++;
-                }
-            }
-            foreach ($cells as $cell) {
-                if (-1 < $cell->solvent[0]) {
-                    sort($cell->solvent);
-                    $result = $this->entityManager
-                        ->getRepository('MesdFilterBundle:FilterCell')
-                        ->getBySolventAndAssociation(
-                            json_encode($cell->solvent),
-                            $cell->associationId
-                        )->getQuery()
-                        ->getResult()
-                    ;
-                    $resultCount = count($result);
-                    if (0 === $resultCount) {
-                        $filterCell = new FilterCell();
-                        $association = $associations[$cell->associationId];
-                        $filterCell->setFilterAssociation($association);
-                        $filterCell->setSolvent($cell->solvent);
-                        $trailEntity = $association->getTrailEntity();
-                        $results = $this->entityManager
-                            ->getRepository($trailEntity->getName())
-                            ->findById($cell->solvent)
-                        ;
-                        $cellDescription = '';
-                        $cellDescriptionIndex = 0;
-                        $cellDescriptionCount = count($results);
-                        foreach ($results as $result) {
-                            if (0 < $cellDescriptionIndex) {
-                                $cellDescription .= ', ';
-                                if (($cellDescriptionCount - 1) === $cellDescriptionIndex) {
-                                    $cellDescription .= 'or ';
-                                }
-                            }
-                            $cellDescription .= $result->__toString();
-                            $cellDescriptionIndex++;
-                        }
-                        $filterCell->setDescription($cellDescription);
-                        $this->entityManager->persist($filterCell);
-                    } elseif (1 === $resultCount) {
-                        $filterCell = $result[0];
-                    } else {
-                        throw new DuplicateFilterCellException(
-                            'there is a duplicate filter cell with solvent '
-                            . $cell->solvent . ' and association '
-                            . $cell->associationId
-                        );
-                    }
-                    $filterRow->addFilterCell($filterCell);
-                    if (0 < $rowDescriptionIndex) {
-                        $rowDescription .= ', ';
-                        if (($rowDescriptionCount - 1) === $rowDescriptionIndex) {
-                            $rowDescription .= 'and ';
-                        }
-                    }
-                    $rowDescription .= '(' . $cellDescription . ')';
-                    $rowDescriptionIndex++;
-                }
-            }
-            $filterRow->setDescription($rowDescription);
             $filterRows->add($filterRow);
         }
         

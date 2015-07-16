@@ -242,10 +242,12 @@ function updateSolvent()
 
     var rows = $('.filter-row');
     var n = rows.length;
+    console.log(n);
     var rowSolvent = [];
     for (var i = 0; i < n; i++) {
         var cells = $(rows[i]).find('.filter-cell');
         var n2 = cells.length;
+        console.log(n2);
         var cellSolvent = [];
         for (var i2 = 0; i2 < n2; i2++) {
             var cell = $(cells[i2]);
@@ -256,11 +258,14 @@ function updateSolvent()
                 solvent: solvent
             };
             cellSolvent.push(json);
+            console.log(cellSolvent);
         }
         rowSolvent.push(cellSolvent);
+        console.log(rowSolvent);
     }
     var value = JSON.stringify(rowSolvent);
     $('#mesd_filterbundle_filter_filterRow').val(value);
+    console.log(value);
 }
 
 function formatResult(item) {
@@ -362,7 +367,7 @@ function addModalListeners()
         var selectedText = cellJoin.children(':selected').text();
         if ('Other' === selectedText) {
             var newCell = $('#' + button.attr('data-code') + '-new-cell');
-            selectedValues = newCell.val();
+            selectedValues = newCell.val().split(',');
             n = selectedValues.length;
             for (var i = 0; i < n; i++) {
                 selectedValues[i] = parseInt(selectedValues[i]);
@@ -372,10 +377,14 @@ function addModalListeners()
                 return a - b;
             });
             selectedValuesString = JSON.stringify(selectedValues);
-            var selectedOptions = newCell.children('option:selected');
+            console.log(newCell.parent());
+            console.log(newCell.parent().find('.select2-search-choice div'));
+            var selectedOptions = newCell.parent().find('.select2-search-choice div');
+            // var selectedOptions = newCell.children('option:selected');
             description = '';
             i = 0;
             var n = selectedOptions.length;
+            console.log(n);
             selectedOptions.each(function() {
                 if (0 < i) {
                     description += ', ';
@@ -383,14 +392,20 @@ function addModalListeners()
                         description += 'or ';
                     }
                 }
-                description += $(this).text();
+                // description += $(this).text();
+                description += $(this).html();
+                console.log($(this));
+                console.log($(this).html());
                 i++;
             });
+            console.log(description);
         } else {
             description = selectedText;
             selectedValuesString = cellJoin.val();
         }
+        console.log(description);
         div.html(description);
+        console.log(description);
         div.attr('data-cell-solvent', selectedValuesString);
         updateSolvent();
         modal.modal('hide');

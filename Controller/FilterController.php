@@ -307,13 +307,13 @@ class FilterController extends Controller
         
         $data = array();
         $data['items'] = array();
-        $data['total_count'] = count($entities);
         foreach ($entities as $entity) {
             $text = $entity->__toString();
             if (($searchTerm === '') || (strpos(strtolower($text), strtolower($searchTerm)) !== false)) {
                 $data['items'][] = array('id' => $entity->getId(), 'text' => $text);
             }
         }
+        $data['total_count'] = count($data['items']);
 
         $response = new JsonResponse();
 
