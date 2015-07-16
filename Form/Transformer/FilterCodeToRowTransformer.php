@@ -36,7 +36,6 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
     public function transform($filterRow)
     {
         if ($filterRow->isEmpty()) {
-
             return '';
         }
 
@@ -159,7 +158,7 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
             }
             $filterRows->add($filterRow);
         }
-        
+
         return $filterRows;
     }
 }

@@ -42,21 +42,7 @@ class FilterController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $filterRow = $entity->getFilterRow();
-            
-            $description = '';
-            $n = $filterRow->count();
-            for ($i = 0; $i < $n; $i++) {
-                if (0 < $i) {
-                    $description .= ', ';
-                    if (($i + 1) === $n) {
-                        $description .= 'or ';
-                    }
-                }
-                $description .= '(' . $filterRow[$i]->getDescription() . ')';
-            }
-            
-            $entity->setDescription($description);
+            $entity->updateDescription();
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($entity);
             $entityManager->flush();
@@ -189,6 +175,7 @@ class FilterController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {
+            $entity->updateDescription();
             $entityManager->flush();
 
             return $this->redirect($this->generateUrl('filter_edit', array('id' => $id)));

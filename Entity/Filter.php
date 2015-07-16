@@ -48,9 +48,35 @@ class Filter
     }
 
     /**
+     * Updates the description based on the filter rows
+     * 
+     * @return Filter
+     */
+    public function updateDescription()
+    {
+        $filterRow = $this->getFilterRow();
+        
+        $description = '';
+        $n = $filterRow->count();
+        for ($i = 0; $i < $n; $i++) {
+            if (0 < $i) {
+                $description .= ', ';
+                if (($i + 1) === $n) {
+                    $description .= 'or ';
+                }
+            }
+            $description .= '(' . $filterRow[$i]->getDescription() . ')';
+        }
+        
+        $this->setDescription($description);
+        
+        return $this;
+    }
+
+    /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -73,7 +99,7 @@ class Filter
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -96,7 +122,7 @@ class Filter
     /**
      * Get description
      *
-     * @return string 
+     * @return string
      */
     public function getDescription()
     {
@@ -119,7 +145,7 @@ class Filter
     /**
      * Get filterCategory
      *
-     * @return \Mesd\FilterBundle\Entity\FilterCategory 
+     * @return \Mesd\FilterBundle\Entity\FilterCategory
      */
     public function getFilterCategory()
     {
@@ -152,7 +178,7 @@ class Filter
     /**
      * Get filterRow
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFilterRow()
     {
