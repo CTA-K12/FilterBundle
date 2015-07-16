@@ -37,3 +37,7 @@ MesdUserBundle_filter_create_cell:
     path:     /cell/create
     defaults: { _controller: "MesdFilterBundle:Filter:createCell" }
     methods:  POST
+
+MesdUserBundle_filter_entity_data:
+    path:     /entity/{id}
+    defaults: { _controller: "MesdFilterBundle:Filter:entityData" }

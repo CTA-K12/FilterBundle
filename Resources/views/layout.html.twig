@@ -2,11 +2,13 @@
 
 {% block stylesheets %}
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link href="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.min.css" rel="stylesheet" />
 {% endblock stylesheets %}
 
 {% block javascripts %}
     <script src="//code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.5.2/select2.js"></script>
     {% javascripts '@MesdFilterBundle/Resources/public/js/filter.js' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}

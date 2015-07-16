@@ -46,8 +46,7 @@ class FilterController extends Controller
             
             $description = '';
             $n = $filterRow->count();
-            for ($i = 0; $i < $n; $i++)
-            {
+            for ($i = 0; $i < $n; $i++) {
                 if (0 < $i) {
                     $description .= ', ';
                     if (($i + 1) === $n) {
@@ -254,8 +253,7 @@ class FilterController extends Controller
             $id = $filterAssociation->getId();
             $filterCells = $entityManager->getRepository('MesdFilterBundle:FilterCell')->findByFilterAssociation($id);
             $cells = array();
-            foreach($filterCells as $filterCell)
-            {
+            foreach ($filterCells as $filterCell) {
                 $cells[] = array(
                     'solvent'     => $filterCell->getSolvent(),
                     'description' => $filterCell->getDescription(),
@@ -266,12 +264,18 @@ class FilterController extends Controller
             $trailEntity = $filterAssociation->getTrailEntity();
             $entities = $entityManager->getRepository($trailEntity->getName())->findAll();
             $values = array();
-            foreach($entities as $entity) {
+            foreach ($entities as $entity) {
                 $values[] = array(
                     'id'   => $entity->getId(),
                     'name' => $entity->__toString(),
                 );
             }
+            $entityDataUrl = $this->generateUrl(
+                'MesdUserBundle_filter_entity_data',
+                array(
+                    'id' => $trailEntity->getId(),
+                )
+            );
             $data['associations'][$code] = array(
                 'cells'         => $cells,
                 'code'          => $code,
@@ -279,7 +283,36 @@ class FilterController extends Controller
                 'name'          => $name,
                 'trailEntityId' => $trailEntity->getId(),
                 'values'        => $values,
+                'entityDataUrl' => $entityDataUrl,
             );
+        }
+
+        $response = new JsonResponse();
+
+        $response->setContent(
+            json_encode($data)
+        );
+
+        return $response;
+    }
+    
+    public function entityDataAction(Request $request, $id)
+    {
+        $searchTerm = $request->query->get('searchTerm');
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $filterEntity = $entityManager->getRepository('MesdFilterBundle:FilterEntity')->find($id);
+        $repository = $entityManager->getRepository($filterEntity->getName());
+        $entities = $repository->findAll();
+        
+        $data = array();
+        $data['items'] = array();
+        $data['total_count'] = count($entities);
+        foreach ($entities as $entity) {
+            $text = $entity->__toString();
+            if (($searchTerm === '') || (strpos(strtolower($text), strtolower($searchTerm)) !== false)) {
+                $data['items'][] = array('id' => $entity->getId(), 'text' => $text);
+            }
         }
 
         $response = new JsonResponse();

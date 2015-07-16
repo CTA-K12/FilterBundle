@@ -25,7 +25,6 @@
     <textarea {{ block('widget_attributes') }}>{% for filterRow in value %}{% if not loop.first %},{% endif %}[{% for solvent in filterRow.solvent %}{% if not loop.first %},{% endif %}[{{ '{"associationId":"' ~ solvent.associationId ~ '","solvent":['}}{% for id in solvent.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}{{']}' }}]{% endfor %}]{% endfor %}</textarea>
     {% if value is not empty %}
         <div id="filter-interface">
-            Loading...
             <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}">
                 <tbody>
                     <tr>
@@ -47,6 +46,7 @@
                         {% endif %}
                         <tr>
                             {% for i in 0..(n-1) %}
+                                {% set codename = associations[i].name | lower | replace({' ' : '-' }) %}
                                 {% if not loop.first %}
                                     <td>AND</td>
                                 {% endif %}
@@ -57,7 +57,7 @@
                                         <td>
                                             <div id="" class="filter-cell" data-cell-solvent="[{% for id in filterCell.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}]" data-association-id="{{ associations[i].id }}">{{ filterCell.description }}</div>
                                             <div>
-                                                <button type="button" class="btn btn-default" data-toggle="modal" data-div-id="{{ associations[i].name | lower | replace({' ' : '-' })}}-{{ row }}">Edit {{ associations[i].name }}</button>
+                                                <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{ codename }}Modal" data-div-id="{{ codename }}-{{ row }}">Edit {{ associations[i].name }}</button>
                                                 
                                             </div>
                                         </td>
@@ -67,7 +67,7 @@
                                 <td>
                                     <div id="" class="filter-cell" data-cell-solvent="[-1]" data-association-id="{{ associations[i].id }}">No {{ associations[i].name }} selected</div>
                                     <div>
-                                        <button type="button" class="btn btn-default" data-toggle="modal" data-div-id="{{ associations[i].name | lower | replace({' ' : '-' })}}-{{ row }}">Edit {{ associations[i].name }}</button>
+                                        <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{ codename }}Modal" data-div-id="{{ codename }}-{{ row }}">Edit {{ associations[i].name }}</button>
                                     </div>
                                 </td>
                                 {% endif %}
@@ -78,7 +78,41 @@
                 </tbody>
             </table>
         </div>
-        <div id="modals"></div>
+        <div id="modals">
+            {% for association in associations %}
+                {% set codename = association.name | lower | replace({' ' : '-' }) %}
+                <div class="modal fade" id="{{ codename }}Modal" tabIndex="-1" role="dialog" aria-labelledby="{{ codename }}ModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="{{ codename }}ModalLabel">Edit {{ association.name }}</h4>
+                            </div>
+                            <div class="modal-body">
+                                <form id="{{ codename }}Form">
+                                    <div class="form-group">
+                                        <label for="cell-join" class="control-label">{{ association.name }}:</label>
+                                        <select class="form-control change-cell-dropdown" id="{{ codename }}-cell-join" name="cell-join" data-association-id="OOO">
+                                            <option></option>
+                                            <option value="OOO">OOO</option>
+                                            <option value="-1">Other</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group hidden">
+                                        <input type="hidden" id="{{ codename }}-new-cell" name="new-cell[]" class="new-cell" />
+                                    </div>
+                                    <input type="hidden" name="trail-entity-id" value="OOO" />
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary modal-save" data-code="OOO">Set {{ association.name }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     {% else %}
         <div id="filter-interface">
             Please select a Filter Category.
