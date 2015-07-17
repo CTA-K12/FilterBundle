@@ -2,9 +2,11 @@
 
 namespace Mesd\FilterBundle\Model;
 
+use Mesd\FilterBundle\Exception\MisappliedFilterException;
 use Mesd\FilterBundle\Exception\MissingFilterException;
 
-class FilterManager {
+class FilterManager
+{
 
     private $securityContext;
     private $objectManager;
@@ -17,7 +19,7 @@ class FilterManager {
         $this->objectManager   = $objectManager->getManager();
     }
 
-    public function setBypassRoles( $bypassRoles )
+    public function setBypassRoles($bypassRoles)
     {
         $this->bypassRoles = $bypassRoles;
 
@@ -29,7 +31,7 @@ class FilterManager {
         return $this->bypassRoles;
     }
 
-    public function setConfig( $config )
+    public function setConfig($config)
     {
         $this->config = $config;
 
@@ -46,7 +48,6 @@ class FilterManager {
         $user = $this->securityContext->getToken()->getUser();
         foreach ($this->bypassRoles as $bypassRole) {
             if ($this->securityContext->isGranted($bypassRole)) {
-
                 return $queryBuilder;
             }
         }
@@ -54,14 +55,12 @@ class FilterManager {
         $filters = $user->getFilter();
         
         if (0 === count($filters)) {
-
             throw new MissingFilterException('Missing Filters');
         }
 
         $filtersByCategory = $this->sortFiltersByCategory($filtersToApply, $filters);
 
         if (count($filtersToApply) != count($filtersByCategory)) {
-
             throw new MissingFilterException('Missing Filters');
         }
 
@@ -70,11 +69,12 @@ class FilterManager {
         return $queryBuilder;
     }
     
-    protected function sortFiltersByCategory($filtersToApply, $filters) {
+    protected function sortFiltersByCategory($filtersToApply, $filters)
+    {
         $filtersByCategory = array();
         foreach ($filters as $filter) {
             $category = $filter->getFilterEntity()->getName();
-            if(in_array($category, $filtersToApply)) {
+            if (in_array($category, $filtersToApply)) {
                 if (array_key_exists($category, $filtersByCategory)) {
                     $filtersByCategory[$category][] = $filter;
                 } else {
@@ -88,8 +88,8 @@ class FilterManager {
     
     protected function applySortedFilters($queryBuilder, $filtersByCategory)
     {
-        $with = $this->getSortedFiltersWith($queryBuilder, $filtersByCategory);
         $rootAlias = $queryBuilder->getRootAlias();
+        $with = $this->getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias);
         
         $entityNames = array();
         
@@ -97,8 +97,8 @@ class FilterManager {
             $category = $filters[0]->getFilterEntity();
             $mainAlias = $category->getOrmName();
             if ($rootAlias !== $mainAlias) {
-
-                throw new MisappliedFilter('filter entity does not match querybuilder alias');
+                throw new MisappliedFilterException('filter entity ' . $mainAlias
+                    . ' does not match querybuilder alias ' . $rootAlias);
             }
             $categoryId = $category->getId();
             $associations = $category->getFilterAssociation();
@@ -109,30 +109,33 @@ class FilterManager {
                 $alias = $mainAlias;
                 $lastAlias = $explodedTrail[count($explodedTrail) - 1];
                 foreach ($explodedTrail as $nextAlias) {
-                    $newAlias = $nextAlias . $categoryId;
-                    if (($lastAlias === $nextAlias) && (($n - 1) === $i)) {
-                        $queryBuilder->join(
-                            $alias . '.' . $nextAlias,
-                            $newAlias,
-                            'WITH',
-                            $with[$categoryString]
-                        );
+                    if ('id' === $nextAlias) {
+                        $queryBuilder->andWhere($with[$categoryString]);
                     } else {
-                        $queryBuilder->join(
-                            $alias . '.' . $nextAlias,
-                            $newAlias
-                        );
-                        $alias = $newAlias;
+                        $newAlias = $nextAlias . $categoryId;
+                        if (($lastAlias === $nextAlias) && (($n - 1) === $i)) {
+                            $queryBuilder->join(
+                                $alias . '.' . $nextAlias,
+                                $newAlias,
+                                'WITH',
+                                $with[$categoryString]
+                            );
+                        } else {
+                            $queryBuilder->join(
+                                $alias . '.' . $nextAlias,
+                                $newAlias
+                            );
+                            $alias = $newAlias;
+                        }
                     }
                 }
                 $i++;
             }
         }
-
         return $queryBuilder;
     }
     
-    protected function getSortedFiltersWith($queryBuilder, $filtersByCategory)
+    protected function getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias)
     {
         $with = array();
         foreach ($filtersByCategory as $categoryString => $filters) {
@@ -144,7 +147,12 @@ class FilterManager {
                     foreach ($row->getFilterCell() as $cell) {
                         $cellWith = array();
                         $association = $cell->getFilterAssociation();
-                        $alias = $association->getTrailEntity()->getDatabaseName() . $filter->getFilterEntity()->getId();
+                        if ('id' === $association->getTrail()) {
+                            $alias = $rootAlias . '.id';
+                        } else {
+                            $alias = $association->getTrailEntity()->getDatabaseName()
+                                . $filter->getFilterEntity()->getId();
+                        }
                         foreach ($cell->getSolvent() as $entityId) {
                             $cellWith[] = $queryBuilder->expr()->eq($alias, $entityId);
                         }
