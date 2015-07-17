@@ -10,12 +10,12 @@
     <div class="form-group">
         {{
             form_label(
-                form.filterCategory
+                form.filterEntity
             )
         }}
         {{
             form_widget(
-                form.filterCategory,
+                form.filterEntity,
                 {
                     'attr': {
                         'data-url': url(
@@ -30,7 +30,7 @@
         }}
         {{
             form_errors(
-                form.filterCategory
+                form.filterEntity
             )
         }}
     </div>

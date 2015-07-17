@@ -110,7 +110,7 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                             $filterCell->setSolvent($cell->solvent);
                             $trailEntity = $association->getTrailEntity();
                             $results = $this->entityManager
-                                ->getRepository($trailEntity->getName())
+                                ->getRepository($trailEntity->getNamespaceName())
                                 ->findById($cell->solvent)
                             ;
                             $cellDescriptionIndex = 0;

@@ -73,7 +73,7 @@ class FilterManager {
     protected function sortFiltersByCategory($filtersToApply, $filters) {
         $filtersByCategory = array();
         foreach ($filters as $filter) {
-            $category = $filter->getFilterCategory()->getName();
+            $category = $filter->getFilterEntity()->getName();
             if(in_array($category, $filtersToApply)) {
                 if (array_key_exists($category, $filtersByCategory)) {
                     $filtersByCategory[$category][] = $filter;
@@ -94,8 +94,8 @@ class FilterManager {
         $entityNames = array();
         
         foreach ($filtersByCategory as $categoryString => $filters) {
-            $category = $filters[0]->getFilterCategory();
-            $mainAlias = $category->getFilterEntity()->getDatabaseName();
+            $category = $filters[0]->getFilterEntity();
+            $mainAlias = $category->getOrmName();
             if ($rootAlias !== $mainAlias) {
 
                 throw new MisappliedFilter('filter entity does not match querybuilder alias');
@@ -144,7 +144,7 @@ class FilterManager {
                     foreach ($row->getFilterCell() as $cell) {
                         $cellWith = array();
                         $association = $cell->getFilterAssociation();
-                        $alias = $association->getTrailEntity()->getDatabaseName() . $filter->getFilterCategory()->getId();
+                        $alias = $association->getTrailEntity()->getDatabaseName() . $filter->getFilterEntity()->getId();
                         foreach ($cell->getSolvent() as $entityId) {
                             $cellWith[] = $queryBuilder->expr()->eq($alias, $entityId);
                         }

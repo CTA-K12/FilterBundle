@@ -6,6 +6,9 @@ Mesd\FilterBundle\Entity\FilterEntity:
         mesd_filterbundle__filter_entity__unique__name:
             columns:
                 - name
+        mesd_filterbundle__filter_entity__unique__namespace_name:
+            columns:
+                - namespace_name
         mesd_filterbundle__filter_entity__unique__database_name:
             columns:
                 - database_name
@@ -20,10 +23,32 @@ Mesd\FilterBundle\Entity\FilterEntity:
             type: string
             column: name
             nullable: false
+        ormName:
+            type: string
+            column: orm_name
+            nullable: false
+        namespaceName:
+            type: string
+            column: namespace_name
+            nullable: false
         databaseName:
             type: string
             column: database_name
             nullable: false
+
+    manyToMany:
+        categoryAssociation:
+            targetEntity: FilterAssociation
+            inversedBy: categoryEntity
+            cascade: {  }
+            joinTable:
+                name: mesd_filter_entity__association
+                joinColumns:
+                    filter_entity_id:
+                        referencedColumnName: id
+                inverseJoinColumns:
+                    filter_association_id:
+                        referencedColumnName: id
 
     oneToMany:
         filterAssociation:
@@ -34,4 +59,7 @@ Mesd\FilterBundle\Entity\FilterEntity:
             mappedBy: trailEntity
         filterCategory:
             targetEntity: FilterCategory
+            mappedBy: filterEntity
+        filter:
+            targetEntity: Filter
             mappedBy: filterEntity

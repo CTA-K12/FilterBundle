@@ -28,7 +28,7 @@
             <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}">
                 <tbody>
                     <tr>
-                        {% set associations = form.vars.value.owner.filterCategory.filterAssociation %}
+                        {% set associations = form.vars.value.owner.filterEntity.filterAssociation %}
                         {% set n = associations | length %}
                         {% for association in associations %}
                             {% if not loop.first %}

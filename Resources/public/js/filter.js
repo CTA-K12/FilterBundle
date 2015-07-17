@@ -3,25 +3,28 @@ $(document).ready(function ()
 {
     'use strict';
 
-    var solvent = $('#mesd_filterbundle_filter_filterRow').val();
-    if ('' !== solvent) {
-        var dropdown = $('#mesd_filterbundle_filter_filterCategory');
-        changeModalsBasedOnDropdown(dropdown);
+    var solventField = $('#mesd_filterbundle_filter_filterRow');
+    if (solventField !== undefined) {
+        var solvent = solventField.val();
+        if ('' !== solvent) {
+            var dropdown = $('#mesd_filterbundle_filter_filterEntity');
+            changeModalsBasedOnDropdown(dropdown);
+        }
+
+        // when category is changed
+        $('#mesd_filterbundle_filter_filterEntity').on('change', function () {
+            console.log('category is changed');
+            var dropdown = this;
+
+            changeInterfaceBasedOnDropdown(dropdown);
+
+        });
+
+        // if the add button was pressed, add another Row
+        // add lisenters to all buttons in each row that have no-listener class
+        // remove rows
+        // update solvent
     }
-
-    // when category is changed
-    $('#mesd_filterbundle_filter_filterCategory').on('change', function () {
-        console.log('category is changed');
-        var dropdown = this;
-
-        changeInterfaceBasedOnDropdown(dropdown);
-
-    });
-
-    // if the add button was pressed, add another Row
-    // add lisenters to all buttons in each row that have no-listener class
-    // remove rows
-    // update solvent
 });
 
 function changeInterfaceBasedOnDropdown (dropdown)

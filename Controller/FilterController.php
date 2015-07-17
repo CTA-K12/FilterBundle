@@ -231,7 +231,7 @@ class FilterController extends Controller
     public function categoryDataAction($id)
     {
         $entityManager = $this->getDoctrine()->getManager();
-        $entity = $entityManager->getRepository('MesdFilterBundle:FilterCategory')->find($id);
+        $entity = $entityManager->getRepository('MesdFilterBundle:FilterEntity')->find($id);
         $data = array(
             'url'          => $this->generateUrl('MesdUserBundle_filter_create_cell'),
             'associations' => array(),
@@ -249,7 +249,7 @@ class FilterController extends Controller
             $name = $filterAssociation->getName();
             $code = str_replace(' ', '-', strtolower($name));
             $trailEntity = $filterAssociation->getTrailEntity();
-            $entities = $entityManager->getRepository($trailEntity->getName())->findAll();
+            $entities = $entityManager->getRepository($trailEntity->getNamespaceName())->findAll();
             $values = array();
             foreach ($entities as $entity) {
                 $values[] = array(
@@ -289,7 +289,7 @@ class FilterController extends Controller
 
         $entityManager = $this->getDoctrine()->getManager();
         $filterEntity = $entityManager->getRepository('MesdFilterBundle:FilterEntity')->find($id);
-        $repository = $entityManager->getRepository($filterEntity->getName());
+        $repository = $entityManager->getRepository($filterEntity->getNamespaceName());
         $entities = $repository->findAll();
         
         $data = array();

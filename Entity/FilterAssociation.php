@@ -42,6 +42,11 @@ class FilterAssociation
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
+    private $categoryEntity;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $filterCategory;
 
     public function __toString()
@@ -61,7 +66,7 @@ class FilterAssociation
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -84,7 +89,7 @@ class FilterAssociation
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -107,7 +112,7 @@ class FilterAssociation
     /**
      * Get trail
      *
-     * @return string 
+     * @return string
      */
     public function getTrail()
     {
@@ -140,7 +145,7 @@ class FilterAssociation
     /**
      * Get filterCell
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFilterCell()
     {
@@ -163,7 +168,7 @@ class FilterAssociation
     /**
      * Get filterEntity
      *
-     * @return \Mesd\FilterBundle\Entity\FilterEntity 
+     * @return \Mesd\FilterBundle\Entity\FilterEntity
      */
     public function getFilterEntity()
     {
@@ -186,7 +191,7 @@ class FilterAssociation
     /**
      * Get trailEntity
      *
-     * @return \Mesd\FilterBundle\Entity\FilterEntity 
+     * @return \Mesd\FilterBundle\Entity\FilterEntity
      */
     public function getTrailEntity()
     {
@@ -219,10 +224,43 @@ class FilterAssociation
     /**
      * Get filterCategory
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFilterCategory()
     {
         return $this->filterCategory;
+    }
+
+    /**
+     * Add categoryEntity
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterEntity $categoryEntity
+     * @return FilterAssociation
+     */
+    public function addCategoryEntity(\Mesd\FilterBundle\Entity\FilterEntity $categoryEntity)
+    {
+        $this->categoryEntity[] = $categoryEntity;
+
+        return $this;
+    }
+
+    /**
+     * Remove categoryEntity
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterEntity $categoryEntity
+     */
+    public function removeCategoryEntity(\Mesd\FilterBundle\Entity\FilterEntity $categoryEntity)
+    {
+        $this->categoryEntity->removeElement($categoryEntity);
+    }
+
+    /**
+     * Get categoryEntity
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategoryEntity()
+    {
+        return $this->categoryEntity;
     }
 }

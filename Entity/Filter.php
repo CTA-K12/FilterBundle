@@ -30,6 +30,11 @@ class Filter
     private $filterCategory;
 
     /**
+     * @var \Mesd\FilterBundle\Entity\FilterEntity
+     */
+    private $filterEntity;
+
+    /**
      * @var \Doctrine\Common\Collections\Collection
      */
     private $filterRow;
@@ -49,7 +54,7 @@ class Filter
 
     /**
      * Updates the description based on the filter rows
-     * 
+     *
      * @return Filter
      */
     public function updateDescription()
@@ -150,6 +155,29 @@ class Filter
     public function getFilterCategory()
     {
         return $this->filterCategory;
+    }
+
+    /**
+     * Set filterEntity
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterEntity $filterEntity
+     * @return Filter
+     */
+    public function setFilterEntity(\Mesd\FilterBundle\Entity\FilterEntity $filterEntity = null)
+    {
+        $this->filterEntity = $filterEntity;
+
+        return $this;
+    }
+
+    /**
+     * Get filterEntity
+     *
+     * @return \Mesd\FilterBundle\Entity\FilterEntity
+     */
+    public function getFilterEntity()
+    {
+        return $this->filterEntity;
     }
 
     /**

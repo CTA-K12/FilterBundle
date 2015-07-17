@@ -30,7 +30,7 @@ class FilterType extends AbstractType
         $builder
             ->add('name')
             ->add(
-                'filterCategory',
+                'filterEntity',
                 null,
                 array(
                     'required' => true,

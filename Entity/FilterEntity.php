@@ -22,6 +22,16 @@ class FilterEntity
     /**
      * @var string
      */
+    private $ormName;
+
+    /**
+     * @var string
+     */
+    private $namespaceName;
+
+    /**
+     * @var string
+     */
     private $databaseName;
 
     /**
@@ -37,7 +47,17 @@ class FilterEntity
     /**
      * @var \Doctrine\Common\Collections\Collection
      */
+    private $categoryAssociation;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
     private $filterCategory;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     */
+    private $filter;
 
     public function __toString()
     {
@@ -51,13 +71,15 @@ class FilterEntity
     {
         $this->filterAssociation = new \Doctrine\Common\Collections\ArrayCollection();
         $this->trailAssociation = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->categoryAssociation = new \Doctrine\Common\Collections\ArrayCollection();
         $this->filterCategory = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->filter = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -67,7 +89,7 @@ class FilterEntity
     /**
      * Set name
      *
-     * @param string $name
+     * @param string name
      * @return FilterEntity
      */
     public function setName($name)
@@ -80,7 +102,7 @@ class FilterEntity
     /**
      * Get name
      *
-     * @return string 
+     * @return string
      */
     public function getName()
     {
@@ -88,9 +110,55 @@ class FilterEntity
     }
 
     /**
+     * Set ormName
+     *
+     * @param string ormName
+     * @return FilterEntity
+     */
+    public function setOrmName($ormName)
+    {
+        $this->ormName = $ormName;
+
+        return $this;
+    }
+
+    /**
+     * Get ormName
+     *
+     * @return string
+     */
+    public function getOrmName()
+    {
+        return $this->ormName;
+    }
+
+    /**
+     * Set namespaceName
+     *
+     * @param string namespaceName
+     * @return FilterEntity
+     */
+    public function setNamespaceName($namespaceName)
+    {
+        $this->namespaceName = $namespaceName;
+
+        return $this;
+    }
+
+    /**
+     * Get namespaceName
+     *
+     * @return string
+     */
+    public function getNamespaceName()
+    {
+        return $this->namespaceName;
+    }
+
+    /**
      * Set databaseName
      *
-     * @param string $databaseName
+     * @param string databaseName
      * @return FilterEntity
      */
     public function setDatabaseName($databaseName)
@@ -103,7 +171,7 @@ class FilterEntity
     /**
      * Get databaseName
      *
-     * @return string 
+     * @return string
      */
     public function getDatabaseName()
     {
@@ -136,7 +204,7 @@ class FilterEntity
     /**
      * Get filterAssociation
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFilterAssociation()
     {
@@ -169,11 +237,44 @@ class FilterEntity
     /**
      * Get trailAssociation
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getTrailAssociation()
     {
         return $this->trailAssociation;
+    }
+
+    /**
+     * Add categoryAssociation
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterAssociation $categoryAssociation
+     * @return FilterEntity
+     */
+    public function addCategoryAssociation(\Mesd\FilterBundle\Entity\FilterAssociation $categoryAssociation)
+    {
+        $this->categoryAssociation[] = $categoryAssociation;
+
+        return $this;
+    }
+
+    /**
+     * Remove categoryAssociation
+     *
+     * @param \Mesd\FilterBundle\Entity\FilterAssociation $categoryAssociation
+     */
+    public function removeCategoryAssociation(\Mesd\FilterBundle\Entity\FilterAssociation $categoryAssociation)
+    {
+        $this->categoryAssociation->removeElement($categoryAssociation);
+    }
+
+    /**
+     * Get categoryAssociation
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getCategoryAssociation()
+    {
+        return $this->categoryAssociation;
     }
 
     /**
@@ -202,10 +303,43 @@ class FilterEntity
     /**
      * Get filterCategory
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getFilterCategory()
     {
         return $this->filterCategory;
+    }
+
+    /**
+     * Add filter
+     *
+     * @param \Mesd\FilterBundle\Entity\Filter $filter
+     * @return FilterEntity
+     */
+    public function addFilter(\Mesd\FilterBundle\Entity\Filter $filter)
+    {
+        $this->filter[] = $filter;
+
+        return $this;
+    }
+
+    /**
+     * Remove filter
+     *
+     * @param \Mesd\FilterBundle\Entity\Filter $filter
+     */
+    public function removeFilter(\Mesd\FilterBundle\Entity\Filter $filter)
+    {
+        $this->filter->removeElement($filter);
+    }
+
+    /**
+     * Get filter
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFilter()
+    {
+        return $this->filter;
     }
 }
