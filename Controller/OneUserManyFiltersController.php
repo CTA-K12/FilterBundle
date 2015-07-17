@@ -5,6 +5,8 @@ namespace Mesd\FilterBundle\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
+use Mesd\FilterBundle\Entity\Filter;
+use Mesd\FilterBundle\Entity\FilterCategory;
 use Mesd\FilterBundle\Form\Type\OneUserManyFiltersType;
 
 /**
@@ -59,7 +61,6 @@ class OneUserManyFiltersController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
         $userClass = $this->container->getParameter('mesd_filter.user_class');
         $userRepository = $entityManager->getRepository($userClass);
         $entity = $userRepository->find($id);
@@ -68,7 +69,7 @@ class OneUserManyFiltersController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $editForm = $this->createEditForm($entity, $filterClass, $userClass);
+        $editForm = $this->createEditForm($entity, $userClass);
 
         return $this->render('MesdFilterBundle:OneUserManyFilters:edit.html.twig', array(
             'entity'      => $entity,
@@ -83,10 +84,15 @@ class OneUserManyFiltersController extends Controller
     *
     * @return \Symfony\Component\Form\Form The form
     */
-    private function createEditForm($entity, $filterClass, $userClass)
+    private function createEditForm($entity, $userClass)
     {
-        $form = $this->createForm(new OneUserManyFiltersType($filterClass, $userClass), $entity, array(
-            'action' => $this->generateUrl('MesdFilterBundle_oneusermanyfilters_update', array('id' => $entity->getId())),
+        $form = $this->createForm(new OneUserManyFiltersType($userClass), $entity, array(
+            'action' => $this->generateUrl(
+                'MesdFilterBundle_oneusermanyfilters_update',
+                array(
+                    'id' => $entity->getId(),
+                )
+            ),
             'method' => 'PUT',
         ));
 
@@ -103,7 +109,6 @@ class OneUserManyFiltersController extends Controller
     {
         $entityManager = $this->getDoctrine()->getManager();
 
-        $filterClass = $this->container->getParameter('mesd_filter.filter_class');
         $userClass = $this->container->getParameter('mesd_filter.user_class');
         $userRepository = $entityManager->getRepository($userClass);
         $entity = $userRepository->find($id);
@@ -112,7 +117,7 @@ class OneUserManyFiltersController extends Controller
             throw $this->createNotFoundException('Unable to find User entity.');
         }
 
-        $editForm = $this->createEditForm($entity, $filterClass, $userClass);
+        $editForm = $this->createEditForm($entity, $userClass);
         $editForm->handleRequest($request);
 
         if ($editForm->isValid()) {

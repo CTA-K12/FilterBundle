@@ -17,8 +17,7 @@ class MesdFilterExtension extends Extension
 
 
         // Store mesd_filter config parameters in container
-        foreach( $config as $parameter => $value ) {
-
+        foreach ($config as $parameter => $value) {
             if (is_array($value)) {
                 foreach ($value as $key => $val) {
                     if (is_array($val)) {
@@ -28,16 +27,14 @@ class MesdFilterExtension extends Extension
                                 $v
                             );
                         }
-                    }
-                    else {
+                    } else {
                         $container->setParameter(
                             'mesd_filter.' . $parameter . '.' . $key,
                             $val
                         );
                     }
                 }
-            }
-            else {
+            } else {
                 $container->setParameter(
                     'mesd_filter.' . $parameter,
                     $value
@@ -48,12 +45,10 @@ class MesdFilterExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
 
         $loader->load('services.yml');
-        $container->setParameter('mesd_filter.filter_class_placeholder', $container->getParameter('mesd_filter.filter_class'));
-        $container->setParameter('mesd_filter.filter_category_class_placeholder', $container->getParameter('mesd_filter.filter_category_class'));
 
         // Once the services definition are read, get your service and add a method call to setConfig()
-        $serviceDefinition = $container->getDefinition( 'mesd_filter.filter_manager' );
-        $serviceDefinition->addMethodCall( 'setBypassRoles', array( $config[ 'filter' ][ 'bypass_roles' ] ) );
-        $serviceDefinition->addMethodCall( 'setConfig', array( $config[ 'filter' ][ 'filters' ] ) );
+        $serviceDefinition = $container->getDefinition('mesd_filter.filter_manager');
+        $serviceDefinition->addMethodCall('setBypassRoles', array($config['filter']['bypass_roles']));
+        $serviceDefinition->addMethodCall('setConfig', array($config['filter']['filters']));
     }
 }

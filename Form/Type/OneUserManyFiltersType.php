@@ -8,28 +8,16 @@ use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
 class OneUserManyFiltersType extends AbstractType
 {
-    private $filterClassName;
     private $userClassName;
 
-    public function __construct($filterClassName, $userClassName)
+    public function __construct($userClassName)
     {
-        $this->filterClassName = $filterClassName;
         $this->userClassName = $userClassName;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add(
-                'filter',
-                'entity',
-                array(
-                    'class' => $this->filterClassName,
-                    'multiple' => true,
-                    'expanded' => true,
-                )
-            )
-        ;
+        $builder->add('mesdFilter');
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
