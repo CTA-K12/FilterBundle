@@ -36,12 +36,15 @@
                             {% endif %}
                             <th>{{ association.name }}</th>
                         {% endfor %}
+                        {% if 1 < n %}
+                            <th>Delete Row</th>
+                        {% endif %}
                     </tr>
                     {% set row = 0 %}
                     {% for filterRow in value %}
                         {% if not loop.first %}
                             <tr>
-                                <td colspan="{{ (n * 2) - 1 }}">OR</td>
+                                <td colspan="{{ (n * 2) - 1 + ((1 < n) ? 1 : 0) }}">OR</td>
                             </tr>
                         {% endif %}
                         <tr class="filter-row">
@@ -72,6 +75,9 @@
                                 </td>
                                 {% endif %}
                             {% endfor %}
+                            {% if 1 < n %}
+                                <td><button id="delete-row-{{ row }}" type="button" class="btn btn-default delete-row no-listener" >Delete Row</button></td>
+                            {% endif %}
                         </tr>
                         {% set row = row + 1 %}
                     {% endfor %}

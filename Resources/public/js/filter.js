@@ -56,7 +56,7 @@ function checkIfAddButtonIsNeeded (associations)
     console.log('check if add button is needed');
     
     var column = $('#filter-interface-table').attr('data-columns');
-    if (parseInt(column) > 1) {
+    if (1 < parseInt(column)) {
         var html = '';
         html += '<a id="filter-row-add" class="btn btn-default" href="#">';
         html += 'Add Row';
@@ -65,7 +65,8 @@ function checkIfAddButtonIsNeeded (associations)
             html
         );
 
-        $('#filter-row-add').on('click', function () {
+        $('#filter-row-add').on('click', function (event) {
+            event.preventDefault();
             var html = '';
             html += '<tr>';
             html += '<td colspan="' + ((associations.length * 2) - 1) + '">OR</td>';
@@ -75,6 +76,7 @@ function checkIfAddButtonIsNeeded (associations)
             table.append(
                 html
             );
+            addDeleteListeners();
         });
     }
 }
@@ -102,6 +104,9 @@ function initializeSingleRow (associations)
         }
         html += '<th>' + associations[key].name + '</th>';
         i++;
+    }
+    if (1 < n) {
+        html += '<th>Delete Row</th>'
     }
     html += '</tr>';
     html += addSingleRow(associations);
@@ -212,6 +217,7 @@ function initializeModals (associations)
     );
     
     addModalListeners();
+    addDeleteListeners();
 }
 
 function addSingleRow(association)
@@ -250,6 +256,16 @@ function addSingleRow(association)
         html += '</div>';
         html += '</td>';
         i++;
+    }
+    var n = 0;
+    for (var key in association) {
+        n++;
+    }
+    if (1 < n) {
+        html += '<td><button id="delete-row-' + row + '"';
+        html += ' "type="button"';
+        html += ' class="btn btn-default delete-row no-listener"';
+        html += ' >Delete Row</button></td>';
     }
     $('#filter-interface-table').attr('data-rows', parseInt(row) + 1);
     html += '</tr>';
@@ -372,7 +388,8 @@ function addModalListeners()
         modal.find('.modal-save').attr('data-div-id', divId);
     });
 
-    $('.modal-save').on('click', function () {
+    $('.modal-save').on('click', function (event) {
+        event.preventDefault();
         console.log('on modal save');
 
         var button = $(this);
@@ -426,4 +443,16 @@ function addModalListeners()
         updateSolvent();
         modal.modal('hide');
     });
+}
+
+function addDeleteListeners()
+{
+    console.log('add delete listeners');
+    $('.delete-row.no-listener').on('click', function(event) {
+        event.preventDefault();
+        console.log('on delete row');
+        
+        $(this).parent().parent().remove();
+    });
+    $(this).removeClass('no-listener');
 }
