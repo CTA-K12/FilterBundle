@@ -143,7 +143,7 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                                 $rowDescription .= 'and ';
                             }
                         }
-                        $rowDescription .= '(' . $cellDescription . ')';
+                        $rowDescription .= '(' . $filterCell->getDescription() . ')';
                         $rowDescriptionIndex++;
                     }
                 }

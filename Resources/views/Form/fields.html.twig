@@ -22,7 +22,7 @@
 {%- endblock form_label -%}
 
 {% block _mesd_filterbundle_filter_filterRow_widget %}
-    <textarea {{ block('widget_attributes') }}>{% for filterRow in value %}{% if not loop.first %},{% endif %}[{% for solvent in filterRow.solvent %}{% if not loop.first %},{% endif %}[{{ '{"associationId":"' ~ solvent.associationId ~ '","solvent":['}}{% for id in solvent.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}{{']}' }}]{% endfor %}]{% endfor %}</textarea>
+    <textarea {{ block('widget_attributes') }}>[{% for filterRow in value %}{% if not loop.first %},{% endif %}[{% for solvent in filterRow.solvent %}{% if not loop.first %},{% endif %}{{ '{"associationId":"' ~ solvent.associationId ~ '","solvent":['}}{% for id in solvent.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}{{']}' }}{% endfor %}]{% endfor %}]</textarea>
     {% if value is not empty %}
         <div id="filter-interface">
             <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}">

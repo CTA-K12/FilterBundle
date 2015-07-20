@@ -59,22 +59,26 @@ class Filter
      */
     public function updateDescription()
     {
-        $filterRow = $this->getFilterRow();
-        
+        $filterRows = $this->getFilterRow();
+
         $description = '';
-        $n = $filterRow->count();
-        for ($i = 0; $i < $n; $i++) {
+
+        $i = 0;
+        $n = $filterRows->count();
+        foreach ($filterRows as $filterRow) {
             if (0 < $i) {
                 $description .= ', ';
                 if (($i + 1) === $n) {
                     $description .= 'or ';
                 }
             }
-            $description .= '(' . $filterRow[$i]->getDescription() . ')';
+            $description .= '(' . $filterRow->getDescription() . ')';
+            
+            $i++;
         }
-        
+
         $this->setDescription($description);
-        
+
         return $this;
     }
 

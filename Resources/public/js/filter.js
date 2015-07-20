@@ -95,11 +95,13 @@ function initializeSingleRow (associations)
     html += addSingleRow(associations);
     html += '</tbody>';
     html += '</table>';
+    /*
     if (1 < i) {
         html += '<a id="filter-row-add" class="btn btn-default" href="#">';
         html += 'Add Row';
         html += '</a>';
     }
+    */
     $('#filter-interface').html(
         html
     );
