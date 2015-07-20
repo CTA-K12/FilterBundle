@@ -19,11 +19,6 @@ $(document).ready(function ()
             changeInterfaceBasedOnDropdown(dropdown);
 
         });
-
-        // if the add button was pressed, add another Row
-        // add lisenters to all buttons in each row that have no-listener class
-        // remove rows
-        // update solvent
     }
 });
 
@@ -37,7 +32,7 @@ function changeInterfaceBasedOnDropdown (dropdown)
         url: url
     }).done(function (data) {
         initializeSingleRow(data.associations);
-        checkIfAddButtonIsNeeded();
+        checkIfAddButtonIsNeeded(data.associations);
         initializeModals(data.associations);
     });
 }
@@ -51,26 +46,37 @@ function changeModalsBasedOnDropdown (dropdown)
     $.ajax({
         url: url
     }).done(function (data) {
-        checkIfAddButtonIsNeeded();
+        checkIfAddButtonIsNeeded(data.associations);
         initializeModals(data.associations);
     });
 }
 
-function checkIfAddButtonIsNeeded ()
+function checkIfAddButtonIsNeeded (associations)
 {
-    console.log('TODO: check if add button is needed');
+    console.log('check if add button is needed');
     
-    $('#filter-row-add').on('click', function () {
+    var column = $('#filter-interface-table').attr('data-columns');
+    if (parseInt(column) > 1) {
         var html = '';
-        html += '<tr>';
-        html += '<td colspan="' + ((data.associations.length * 2) - 1) + '">OR</td>';
-        html += '</tr>';
-        html += addRow(data.associations);
-        var table = $('#filter-interface-table');
-        table.append(
+        html += '<a id="filter-row-add" class="btn btn-default" href="#">';
+        html += 'Add Row';
+        html += '</a>';
+        $('#filter-interface').append(
             html
         );
-    });
+
+        $('#filter-row-add').on('click', function () {
+            var html = '';
+            html += '<tr>';
+            html += '<td colspan="' + ((associations.length * 2) - 1) + '">OR</td>';
+            html += '</tr>';
+            html += addSingleRow(associations);
+            var table = $('#filter-interface-table');
+            table.append(
+                html
+            );
+        });
+    }
 }
 
 function initializeSingleRow (associations)
@@ -80,7 +86,13 @@ function initializeSingleRow (associations)
     var html = '<table';
     html += ' id="filter-interface-table"';
     html += ' class="table table-striped table-bordered table-hover table-responsive"';
-    html += ' data-rows="1">';
+    html += ' data-rows="1"';
+    var n = 0;
+    for (var key in associations) {
+        n++;
+    }
+    html += ' data-columns="' + n + '"';
+    html += '>';
     html += '<tbody>';
     html += '<tr>';
     var i = 0;
@@ -95,13 +107,6 @@ function initializeSingleRow (associations)
     html += addSingleRow(associations);
     html += '</tbody>';
     html += '</table>';
-    /*
-    if (1 < i) {
-        html += '<a id="filter-row-add" class="btn btn-default" href="#">';
-        html += 'Add Row';
-        html += '</a>';
-    }
-    */
     $('#filter-interface').html(
         html
     );
@@ -118,29 +123,38 @@ function initializeModals (associations)
         html += ' id="' + associations[key].code + 'Modal"';
         html += ' tabindex="-1"';
         html += ' role="dialog"';
-        html += ' aria-labelledby="' + associations[key].code + 'ModalLabel">';
+        html += ' aria-labelledby="' + associations[key].code + 'ModalLabel"';
+        html += '>';
         html += '<div';
         html += ' class="modal-dialog"';
-        html += ' role="document">';
+        html += ' role="document"';
+        html += '>';
         html += '<div';
-        html += ' class="modal-content">';
+        html += ' class="modal-content"';
+        html += '>';
         html += '<div';
-        html += ' class="modal-header">';
+        html += ' class="modal-header"';
+        html += '>';
         html += '<button type="button"';
         html += ' class="close"';
         html += ' data-dismiss="modal"';
         html += ' aria-label="Close"><span';
-        html += ' aria-hidden="true">&times;</span></button>';
+        html += ' aria-hidden="true"';
+        html += '>';
+        html += '&times;</span></button>';
         html += '<h4';
         html += ' class="modal-title"';
         html += ' id="' + associations[key].code + 'ModalLabel">Edit ' + associations[key].name + '</h4>';
         html += '</div>';
         html += '<div';
-        html += ' class="modal-body">';
+        html += ' class="modal-body"';
+        html += '>';
         html += '<form';
-        html += ' id="' + associations[key].code + 'Form">';
+        html += ' id="' + associations[key].code + 'Form"';
+        html += '>';
         html += '<div';
-        html += ' class="form-group">';
+        html += ' class="form-group"';
+        html += '>';
         html += '<label';
         html += ' for="cell-join"';
         html += ' class="control-label">' + associations[key].name + ':</label>';
@@ -148,7 +162,8 @@ function initializeModals (associations)
         html += ' class="form-control change-cell-dropdown"';
         html += ' id="' + associations[key].code + '-cell-join"';
         html += ' name="cell-join"';
-        html += ' data-association-id="' + associations[key].associationId + '">';
+        html += ' data-association-id="' + associations[key].associationId + '"';
+        html += '>';
         html += '<option></option>';
         for (var i = 0; i < associations[key].cells.length; i++) {
             html += '<option value="' + JSON.stringify(associations[key].cells[i].solvent) + '">';
@@ -178,7 +193,8 @@ function initializeModals (associations)
         html += '</form>';
         html += '</div>';
         html += '<div';
-        html += ' class="modal-footer">';
+        html += ' class="modal-footer"';
+        html += '>';
         html += '<button type="button"';
         html += ' class="btn btn-default"';
         html += ' data-dismiss="modal">Close</button>';
@@ -385,7 +401,6 @@ function addModalListeners()
             console.log(newCell.parent());
             console.log(newCell.parent().find('.select2-search-choice div'));
             var selectedOptions = newCell.parent().find('.select2-search-choice div');
-            // var selectedOptions = newCell.children('option:selected');
             description = '';
             i = 0;
             var n = selectedOptions.length;
@@ -397,13 +412,9 @@ function addModalListeners()
                         description += 'or ';
                     }
                 }
-                // description += $(this).text();
                 description += $(this).html();
-                console.log($(this));
-                console.log($(this).html());
                 i++;
             });
-            console.log(description);
         } else {
             description = selectedText;
             selectedValuesString = cellJoin.val();

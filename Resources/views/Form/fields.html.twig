@@ -25,11 +25,11 @@
     <textarea {{ block('widget_attributes') }}>[{% for filterRow in value %}{% if not loop.first %},{% endif %}[{% for solvent in filterRow.solvent %}{% if not loop.first %},{% endif %}{{ '{"associationId":"' ~ solvent.associationId ~ '","solvent":['}}{% for id in solvent.solvent %}{% if not loop.first %},{% endif %}{{ id }}{% endfor %}{{']}' }}{% endfor %}]{% endfor %}]</textarea>
     {% if value is not empty %}
         <div id="filter-interface">
-            <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}">
+            {% set associations = form.vars.value.owner.filterEntity.filterAssociation %}
+            {% set n = associations | length %}
+            <table id="filter-interface-table" class="table table-striped table-bordered table-hover table-responsive" data-rows="{{ value | length }}" data-columns="{{ n }}">
                 <tbody>
                     <tr>
-                        {% set associations = form.vars.value.owner.filterEntity.filterAssociation %}
-                        {% set n = associations | length %}
                         {% for association in associations %}
                             {% if not loop.first %}
                                 <th></th>
