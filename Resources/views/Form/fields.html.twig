@@ -43,7 +43,7 @@
                     {% set row = 0 %}
                     {% for filterRow in value %}
                         {% if not loop.first %}
-                            <tr>
+                            <tr class="or">
                                 <td colspan="{{ (n * 2) - 1 + ((1 < n) ? 1 : 0) }}">OR</td>
                             </tr>
                         {% endif %}

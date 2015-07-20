@@ -68,7 +68,7 @@ function checkIfAddButtonIsNeeded (associations)
         $('#filter-row-add').on('click', function (event) {
             event.preventDefault();
             var html = '';
-            html += '<tr>';
+            html += '<tr class="or">';
             html += '<td colspan="' + ((associations.length * 2) - 1) + '">OR</td>';
             html += '</tr>';
             html += addSingleRow(associations);
@@ -452,6 +452,10 @@ function addDeleteListeners()
         event.preventDefault();
         console.log('on delete row');
         
+        var previousSibling = $(this).parent().parent().prev();
+        if (previousSibling.hasClass('or')) {
+            previousSibling.remove();
+        }
         $(this).parent().parent().remove();
     });
     $(this).removeClass('no-listener');
