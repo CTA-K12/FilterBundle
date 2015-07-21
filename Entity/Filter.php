@@ -61,21 +61,20 @@ class Filter
     {
         $filterRows = $this->getFilterRow();
 
-        $description = '';
+        $descriptions = array();
 
-        $i = 0;
-        $n = $filterRows->count();
         foreach ($filterRows as $filterRow) {
-            if (0 < $i) {
-                $description .= ', ';
-                if (($i + 1) === $n) {
-                    $description .= 'or ';
-                }
-            }
-            $description .= '(' . $filterRow->getDescription() . ')';
-            
-            $i++;
+            $descriptions[] = '(' . $filterRow->getDescription() . ')';
         }
+
+        sort($descriptions);
+        
+        $n = count($descriptions);
+        if (1 < $n) {
+            $descriptions[$n - 1] = 'or ' . $descriptions[$n - 1];
+        }
+
+        $description = implode(', ', $descriptions);
 
         $this->setDescription($description);
 
