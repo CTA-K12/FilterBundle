@@ -55,17 +55,23 @@ class FilterManager
         $filters = $user->getFilter();
         
         if (0 === count($filters)) {
-            throw new MissingFilterException('Missing Filters');
+            throw new MissingFilterException('user has zero filters');
         }
 
         $filtersByCategory = $this->sortFiltersByCategory($filtersToApply, $filters);
 
         if (count($filtersToApply) != count($filtersByCategory)) {
-            throw new MissingFilterException('Missing Filters');
+            $expected = implode(', ', $filtersToApply);
+            $actual = implode(', ', array_keys($filtersByCategory));
+            throw new MissingFilterException($expected . ' filters expected but got ' . $actual);
         }
 
         $queryBuilder = $this->applySortedFilters($queryBuilder, $filtersByCategory);
 
+        // print_r($queryBuilder->getQuery()->getDQL());
+        // print_r('<hr />');
+        // print_r($queryBuilder->getQuery()->getSQL());
+        // print_r('<hr />');
         return $queryBuilder;
     }
     
@@ -89,16 +95,18 @@ class FilterManager
     protected function applySortedFilters($queryBuilder, $filtersByCategory)
     {
         $rootAlias = $queryBuilder->getRootAlias();
+        $rootNamespaces = $queryBuilder->getRootEntities();
         $with = $this->getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias);
         
         $entityNames = array();
         
         foreach ($filtersByCategory as $categoryString => $filters) {
             $category = $filters[0]->getFilterEntity();
-            $mainAlias = $category->getOrmName();
-            if ($rootAlias !== $mainAlias) {
-                throw new MisappliedFilterException('filter entity ' . $mainAlias
-                    . ' does not match querybuilder alias ' . $rootAlias);
+            $mainAlias = $rootAlias;
+            $mainNamespace = $category->getNamespaceName();
+            if (!in_array($mainNamespace, $rootNamespaces)) {
+                throw new MisappliedFilterException('filter entity ' . $mainNamespace
+                    . ' does not match querybuilder entities ' . implode(', ', $rootNamespaces));
             }
             $categoryId = $category->getId();
             $associations = $category->getFilterAssociation();
@@ -147,10 +155,14 @@ class FilterManager
                     foreach ($row->getFilterCell() as $cell) {
                         $cellWith = array();
                         $association = $cell->getFilterAssociation();
-                        if ('id' === $association->getTrail()) {
+                        $trail = $association->getTrail();
+                        if ('id' === $trail) {
                             $alias = $rootAlias . '.id';
                         } else {
-                            $alias = $association->getTrailEntity()->getDatabaseName()
+                            $explodedTrail = explode('->', $trail);
+                            $n = count($explodedTrail);
+                            $endAlias = $explodedTrail[$n - 1];
+                            $alias = $endAlias
                                 . $filter->getFilterEntity()->getId();
                         }
                         foreach ($cell->getSolvent() as $entityId) {

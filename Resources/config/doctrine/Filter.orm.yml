@@ -6,9 +6,6 @@ Mesd\FilterBundle\Entity\Filter:
         mesd_filterbundle__filter__unique__name:
             columns:
                 - name
-        mesd_filterbundle__filter__unique__description:
-            columns:
-                - description
 
     fields:
         id:
