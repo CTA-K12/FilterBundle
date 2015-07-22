@@ -68,10 +68,6 @@ class FilterManager
 
         $queryBuilder = $this->applySortedFilters($queryBuilder, $filtersByCategory);
 
-        // print_r($queryBuilder->getQuery()->getDQL());
-        // print_r('<hr />');
-        // print_r($queryBuilder->getQuery()->getSQL());
-        // print_r('<hr />');
         return $queryBuilder;
     }
     
@@ -122,14 +118,14 @@ class FilterManager
                     } else {
                         $newAlias = $nextAlias . $categoryId;
                         if (($lastAlias === $nextAlias) && (($n - 1) === $i)) {
-                            $queryBuilder->join(
+                            $queryBuilder->leftJoin(
                                 $alias . '.' . $nextAlias,
                                 $newAlias,
                                 'WITH',
                                 $with[$categoryString]
                             );
                         } else {
-                            $queryBuilder->join(
+                            $queryBuilder->leftJoin(
                                 $alias . '.' . $nextAlias,
                                 $newAlias
                             );
