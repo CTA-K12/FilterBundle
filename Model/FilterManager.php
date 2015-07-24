@@ -54,10 +54,6 @@ class FilterManager
 
         $filters = $user->getFilter();
         
-        if (0 === count($filters)) {
-            throw new MissingFilterException('user has zero filters');
-        }
-
         $filtersByCategory = $this->sortFiltersByCategory($filtersToApply, $filters);
 
         if (count($filtersToApply) != count($filtersByCategory)) {
