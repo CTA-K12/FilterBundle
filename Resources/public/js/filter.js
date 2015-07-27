@@ -188,7 +188,7 @@ function initializeModals (associations)
         html += ' type="hidden"';
         html += ' id="' + associations[key].code + '-new-cell"';
         html += ' name="new-cell[]"';
-        html += ' class="new-cell"';
+        html += ' class="new-cell form-control"';
         html += ' data-entity-data-url="' + associations[key].entityDataUrl + '"'
         html += ' />';
         html += '</div>';
@@ -360,7 +360,8 @@ function addModalListeners()
             formatResult: formatResult, // omitted for brevity, see the source of this page
             formatSelection: formatSelection,  // omitted for brevity, see the source of this page
             dropdownCssClass: "bigdrop", // apply css that makes the dropdown taller
-            escapeMarkup: function (m) { return m; } // we do not want to escape markup since we are displaying html in results
+            escapeMarkup: function (m) { return m; }, // we do not want to escape markup since we are displaying html in results
+            'width':'resolve'
         });
     });
 
