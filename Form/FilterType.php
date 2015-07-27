@@ -2,6 +2,8 @@
 
 namespace Mesd\FilterBundle\Form;
 
+use Doctrine\ORM\EntityRepository;
+
 use Mesd\FilterBundle\Form\Factory\FilterCodeToRowTransformerFactory;
 use Mesd\FilterBundle\Form\Transformer\FilterCodeToRowTransformer;
 
@@ -35,6 +37,9 @@ class FilterType extends AbstractType
                 array(
                     'required' => true,
                     'empty_value' => '',
+                    'query_builder' => function (EntityRepository $entityRepository) {
+                        return $entityRepository->getCategories();
+                    },
                 )
             )
         ;
