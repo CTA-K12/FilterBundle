@@ -2,6 +2,7 @@
 $(document).ready(function ()
 {
     'use strict';
+    console.log('use strict');
 
     var solventField = $('#mesd_filterbundle_filter_filterRow');
     if (solventField !== undefined) {
@@ -40,15 +41,17 @@ function changeInterfaceBasedOnDropdown (dropdown)
 function changeModalsBasedOnDropdown (dropdown)
 {
     console.log('change modals based on dropdown');
-    
-    var url = $(dropdown).attr('data-url');
-    url = url.replace('-1', $(dropdown).val());
-    $.ajax({
-        url: url
-    }).done(function (data) {
-        checkIfAddButtonIsNeeded(data.associations);
-        initializeModals(data.associations);
-    });
+    if ('' !== $(dropdown).val()) {
+        var url = $(dropdown).attr('data-url');
+        console.log($(dropdown).val());
+        url = url.replace('-1', $(dropdown).val());
+        $.ajax({
+            url: url
+        }).done(function (data) {
+            checkIfAddButtonIsNeeded(data.associations);
+            initializeModals(data.associations);
+        });
+    }
 }
 
 function checkIfAddButtonIsNeeded (associations)
