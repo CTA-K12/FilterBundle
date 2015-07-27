@@ -12,4 +12,14 @@ use Doctrine\ORM\EntityRepository;
  */
 class FilterEntityRepository extends EntityRepository
 {
+    public function getCategories()
+    {
+        $queryBuilder = $this->createQueryBuilder('filterEntity');
+        $queryBuilder->join('filterEntity.filterAssociation', 'filterAssociation');
+        $queryBuilder->groupBy('filterEntity');
+        $queryBuilder->having('COUNT(filterAssociation) > 0');
+        $queryBuilder->orderBy('filterEntity.name');
+        
+        return $queryBuilder;
+    }
 }
