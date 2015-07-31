@@ -41,9 +41,9 @@ function changeInterfaceBasedOnDropdown (dropdown)
 function changeModalsBasedOnDropdown (dropdown)
 {
     console.log('change modals based on dropdown');
+
     if ('' !== $(dropdown).val()) {
         var url = $(dropdown).attr('data-url');
-        console.log($(dropdown).val());
         url = url.replace('-1', $(dropdown).val());
         $.ajax({
             url: url
@@ -282,12 +282,10 @@ function updateSolvent()
 
     var rows = $('.filter-row');
     var n = rows.length;
-    console.log(n);
     var rowSolvent = [];
     for (var i = 0; i < n; i++) {
         var cells = $(rows[i]).find('.filter-cell');
         var n2 = cells.length;
-        console.log(n2);
         var cellSolvent = [];
         for (var i2 = 0; i2 < n2; i2++) {
             var cell = $(cells[i2]);
@@ -298,14 +296,11 @@ function updateSolvent()
                 solvent: solvent
             };
             cellSolvent.push(json);
-            console.log(cellSolvent);
         }
         rowSolvent.push(cellSolvent);
-        console.log(rowSolvent);
     }
     var value = JSON.stringify(rowSolvent);
     $('#mesd_filterbundle_filter_filterRow').val(value);
-    console.log(value);
 }
 
 function formatResult(item) {
@@ -408,6 +403,8 @@ function addModalListeners()
         var selectedValuesString = '';
         var selectedText = cellJoin.children(':selected').text();
         if ('Other' === selectedText) {
+            console.log('other was selected');
+            
             var newCell = $('#' + button.attr('data-code') + '-new-cell');
             selectedValues = newCell.val().split(',');
             n = selectedValues.length;
@@ -419,13 +416,10 @@ function addModalListeners()
                 return a - b;
             });
             selectedValuesString = JSON.stringify(selectedValues);
-            console.log(newCell.parent());
-            console.log(newCell.parent().find('.select2-search-choice div'));
             var selectedOptions = newCell.parent().find('.select2-search-choice div');
             description = '';
             i = 0;
             var n = selectedOptions.length;
-            console.log(n);
             selectedOptions.each(function() {
                 if (0 < i) {
                     description += ', ';
@@ -437,12 +431,12 @@ function addModalListeners()
                 i++;
             });
         } else {
+            console.log('other was not selected');
+
             description = selectedText;
             selectedValuesString = cellJoin.val();
         }
-        console.log(description);
         div.html(description);
-        console.log(description);
         div.attr('data-cell-solvent', selectedValuesString);
         updateSolvent();
         modal.modal('hide');
@@ -452,6 +446,7 @@ function addModalListeners()
 function addDeleteListeners()
 {
     console.log('add delete listeners');
+
     $('.delete-row.no-listener').on('click', function(event) {
         event.preventDefault();
         console.log('on delete row');
