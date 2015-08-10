@@ -42,7 +42,7 @@ class FilterManager
     {
         return $this->config;
     }
-
+    
     public function applyFilters($queryBuilder, $filtersToApply)
     {
         $user = $this->securityContext->getToken()->getUser();
@@ -66,7 +66,7 @@ class FilterManager
 
         return $queryBuilder;
     }
-    
+
     protected function sortFiltersByCategory($filtersToApply, $filters)
     {
         $filtersByCategory = array();
@@ -89,9 +89,7 @@ class FilterManager
         $rootAlias = $queryBuilder->getRootAlias();
         $rootNamespaces = $queryBuilder->getRootEntities();
         $with = $this->getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias);
-        
         $entityNames = array();
-        
         foreach ($filtersByCategory as $categoryString => $filters) {
             $category = $filters[0]->getFilterEntity();
             $mainAlias = $rootAlias;
@@ -102,42 +100,46 @@ class FilterManager
             }
             $categoryId = $category->getId();
             $associations = $category->getFilterAssociation();
-            $i = 0;
-            $n = count($associations);
             foreach ($associations as $association) {
                 $explodedTrail = explode('->', $association->getTrail());
                 $alias = $mainAlias;
                 $lastAlias = $explodedTrail[count($explodedTrail) - 1];
                 foreach ($explodedTrail as $nextAlias) {
                     if ('id' === $nextAlias) {
-                        $queryBuilder->andWhere($with[$categoryString]);
+                        $queryBuilder->andWhere($with['on'][$categoryString]);
                     } else {
                         $newAlias = $nextAlias . $categoryId;
-                        if (($lastAlias === $nextAlias) && (($n - 1) === $i)) {
-                            $queryBuilder->leftJoin(
-                                $alias . '.' . $nextAlias,
-                                $newAlias,
-                                'WITH',
-                                $with[$categoryString]
-                            );
-                        } else {
-                            $queryBuilder->leftJoin(
-                                $alias . '.' . $nextAlias,
-                                $newAlias
-                            );
-                            $alias = $newAlias;
+                        if (array_key_exists($newAlias, $with['inner'])) {
+                            if ($with['last'] === $newAlias) {
+                                $queryBuilder->innerJoin(
+                                    $alias . '.' . $nextAlias,
+                                    $newAlias,
+                                    'WITH',
+                                    $with['on'][$categoryString]
+                                );
+                            } else {
+                                $queryBuilder->innerJoin(
+                                    $alias . '.' . $nextAlias,
+                                    $newAlias
+                                );
+                                $alias = $newAlias;
+                            }
                         }
                     }
                 }
-                $i++;
             }
         }
+
         return $queryBuilder;
     }
     
     protected function getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias)
     {
-        $with = array();
+        $with = array(
+            'inner' => array(),
+            'on' => array(),
+            'last' => '',
+        );
         foreach ($filtersByCategory as $categoryString => $filters) {
             $categoryWith = array();
             foreach ($filters as $filter) {
@@ -150,6 +152,8 @@ class FilterManager
                         $trail = $association->getTrail();
                         if ('id' === $trail) {
                             $alias = $rootAlias . '.id';
+                            $endAlias = 'id';
+                            $explodedTrail = array('id');
                         } else {
                             $explodedTrail = explode('->', $trail);
                             $n = count($explodedTrail);
@@ -158,6 +162,13 @@ class FilterManager
                                 . $filter->getFilterEntity()->getId();
                         }
                         foreach ($cell->getSolvent() as $entityId) {
+                            foreach ($explodedTrail as $trailItem) {
+                                $trailItem .= $filter->getFilterEntity()->getId();
+                                if (!array_key_exists($trailItem, $with['inner'])) {
+                                    $with['inner'][$trailItem] = $trailItem;
+                                }
+                                $with['last'] = $trailItem;
+                            }
                             $cellWith[] = $queryBuilder->expr()->eq($alias, $entityId);
                         }
                         $rowWith[] = '(' . implode(' OR ', $cellWith) . ')';
@@ -166,7 +177,7 @@ class FilterManager
                 }
                 $categoryWith[] = '(' . implode(' OR ', $filterWith) . ')';
             }
-            $with[$categoryString] = '(' . implode(' OR ', $categoryWith) . ')';
+            $with['on'][$categoryString] = '(' . implode(' OR ', $categoryWith) . ')';
         }
         
         return $with;
