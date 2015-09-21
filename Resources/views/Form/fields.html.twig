@@ -70,7 +70,7 @@
                                 {% endfor %}
                                 {% if not found %}
                                 <td>
-                                    <div id="" class="filter-cell" data-cell-solvent="[-1]" data-association-id="{{ associations[i].id }}">No {{ associations[i].name }} selected</div>
+                                    <div id="{{ codename }}-{{ row }}" class="filter-cell" data-cell-solvent="[-1]" data-association-id="{{ associations[i].id }}">No {{ associations[i].name }} selected</div>
                                     <div>
                                         <button type="button" class="btn btn-default" data-toggle="modal" data-target="#{{ codename }}Modal" data-div-id="{{ codename }}-{{ row }}">Edit {{ associations[i].name }}</button>
                                     </div>
