@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "244708d8175b24fb57846e4e40b0f0d4",
+    "hash": "65a380c27bbc419fe08ec831daca0b72",
     "packages": [],
     "packages-dev": [
         {
@@ -1738,26 +1738,26 @@
         },
         {
             "name": "symfony/config",
-            "version": "dev-master",
+            "version": "2.8.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/config.git",
-                "reference": "7e451255242ac0fc6cfd72815fbf5f71893e9ca4"
+                "reference": "647a2a148d8ce2847ea75e58608b0a89f5a1dd1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/config/zipball/7e451255242ac0fc6cfd72815fbf5f71893e9ca4",
-                "reference": "7e451255242ac0fc6cfd72815fbf5f71893e9ca4",
+                "url": "https://api.github.com/repos/symfony/config/zipball/647a2a148d8ce2847ea75e58608b0a89f5a1dd1b",
+                "reference": "647a2a148d8ce2847ea75e58608b0a89f5a1dd1b",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5.9",
-                "symfony/filesystem": "~2.8|~3.0"
+                "php": ">=5.3.9",
+                "symfony/filesystem": "~2.3|~3.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "3.0-dev"
+                    "dev-master": "2.8-dev"
                 }
             },
             "autoload": {
@@ -1781,7 +1781,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2015-10-11 09:14:55"
+            "time": "2015-10-11 08:29:26"
         },
         {
             "name": "symfony/console",
