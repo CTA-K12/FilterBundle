@@ -9,7 +9,7 @@ php:
     - hhvm
 
 install:
-    - composer install --prefer-dist
+    - composer install
 
 script:
     # --coverage-clover for Coveralls
