@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "efbb9975e690e151274b8b747a2e286e",
+    "hash": "2157c5176335590b80248cab0cf01bd9",
     "packages": [],
     "packages-dev": [
         {
@@ -1873,20 +1873,20 @@
         },
         {
             "name": "twig/twig",
-            "version": "dev-master",
+            "version": "1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/twigphp/Twig.git",
-                "reference": "112c5112609ff74df6e6a1a7375efc30f442c0db"
+                "reference": "656ecc0a5ce61c5b030eddb53c9e400fa99ee48a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twigphp/Twig/zipball/112c5112609ff74df6e6a1a7375efc30f442c0db",
-                "reference": "112c5112609ff74df6e6a1a7375efc30f442c0db",
+                "url": "https://api.github.com/repos/twigphp/Twig/zipball/656ecc0a5ce61c5b030eddb53c9e400fa99ee48a",
+                "reference": "656ecc0a5ce61c5b030eddb53c9e400fa99ee48a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.5"
+                "php": ">=5.2.7"
             },
             "require-dev": {
                 "symfony/debug": "~2.7",
@@ -1895,7 +1895,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "1.22-dev"
                 }
             },
             "autoload": {
@@ -1930,7 +1930,7 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2015-10-13 07:18:23"
+            "time": "2015-10-13 07:16:21"
         }
     ],
     "aliases": [],
