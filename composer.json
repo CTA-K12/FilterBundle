@@ -18,7 +18,8 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^1.4",
         "phpunit/phpunit": "^4.8",
-        "symfony/config": "^2.8"
+        "symfony/config": "^2.8",
+        "symfony/console": "^2.8"
     },
     "autoload": {
         "psr-0": {
