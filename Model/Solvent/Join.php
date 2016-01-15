@@ -2,6 +2,8 @@
 
 namespace Mesd\FilterBundle\Model\Solvent;
 
+use Doctrine\ORM\QueryBuilder;
+
 /**
  * Join
  */
@@ -81,7 +83,7 @@ class Join {
         return $this->value;
     }
 
-    public function applyToQueryBuilder($alias, $queryBuilder, $details, $entity)
+    public function applyToQueryBuilder($alias, QueryBuilder $queryBuilder, $details, Entity $entity)
     {
         $associations = $this->association;
         $length = count($associations);
