@@ -100,6 +100,7 @@ class FilterManager
             }
             $categoryId = $category->getId();
             $associations = $category->getFilterAssociation();
+            $joins = [];
             foreach ($associations as $association) {
                 $explodedTrail = explode('->', $association->getTrail());
                 $alias = $mainAlias;
@@ -110,22 +111,29 @@ class FilterManager
                     } else {
                         $newAlias = $nextAlias . $categoryId;
                         if (array_key_exists($newAlias, $with['inner'])) {
-                            if ($with['last'] === $newAlias) {
-                                $queryBuilder->innerJoin(
-                                    $alias . '.' . $nextAlias,
-                                    $newAlias,
-                                    'WITH',
-                                    $with['on'][$categoryString]
-                                );
-                            } else {
-                                $queryBuilder->innerJoin(
-                                    $alias . '.' . $nextAlias,
-                                    $newAlias
-                                );
-                                $alias = $newAlias;
-                            }
+                            $joins[] = array(
+                                'table' => $alias . '.' . $nextAlias,
+                                'alias' => $newAlias,
+                            );
+                            $alias = $newAlias;
                         }
                     }
+                }
+            }
+            $n = count($joins);
+            for ($i = 0; $i < $n; $i += 1) {
+                if ($i === ($n - 1)) {
+                    $queryBuilder->innerJoin(
+                        $joins[$i]['table'],
+                        $joins[$i]['alias'],
+                        'WITH',
+                        $with['on'][$categoryString]
+                    );
+                } else {
+                    $queryBuilder->innerJoin(
+                        $joins[$i]['table'],
+                        $joins[$i]['alias']
+                    );
                 }
             }
         }
