@@ -2,6 +2,8 @@
 
 namespace Mesd\FilterBundle\Model;
 
+use Doctrine\ORM\QueryBuilder;
+
 use Mesd\FilterBundle\Exception\MisappliedFilterException;
 use Mesd\FilterBundle\Exception\MissingFilterException;
 
@@ -41,7 +43,7 @@ class FilterManager
         return $this->config;
     }
     
-    public function applyFilters($queryBuilder, $filtersToApply)
+    public function applyFilters(QueryBuilder $queryBuilder, $filtersToApply)
     {
         $user = $this->securityContext->getToken()->getUser();
         foreach ($this->bypassRoles as $bypassRole) {
@@ -60,7 +62,7 @@ class FilterManager
             throw new MissingFilterException($expected . ' filters expected but got ' . $actual);
         }
 
-        $queryBuilder = $this->applySortedFilters($queryBuilder, $filtersByCategory);
+        $queryBuilder = $this->applySortedFilters(QueryBuilder $queryBuilder, $filtersByCategory);
 
         return $queryBuilder;
     }
@@ -82,7 +84,7 @@ class FilterManager
         return $filtersByCategory;
     }
     
-    protected function applySortedFilters($queryBuilder, $filtersByCategory)
+    protected function applySortedFilters(QueryBuilder $queryBuilder, $filtersByCategory)
     {
         $rootAlias = $queryBuilder->getRootAlias();
         $rootNamespaces = $queryBuilder->getRootEntities();
@@ -137,7 +139,7 @@ class FilterManager
         return $queryBuilder;
     }
     
-    protected function getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias)
+    protected function getSortedFiltersWith(QueryBuilder $queryBuilder, $filtersByCategory, $rootAlias)
     {
         $with = array(
             'inner' => array(),
