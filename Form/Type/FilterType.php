@@ -1,6 +1,6 @@
 <?php
 
-namespace Mesd\FilterBundle\Form;
+namespace Mesd\FilterBundle\Form\Type;
 
 use Doctrine\ORM\EntityRepository;
 
