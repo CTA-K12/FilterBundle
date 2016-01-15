@@ -7,8 +7,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Mesd\FilterBundle\Entity\Filter;
-use Mesd\FilterBundle\Entity\FilterCell;
-use Mesd\FilterBundle\Form\FilterType;
 
 /**
  * Filter controller.

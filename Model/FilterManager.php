@@ -2,6 +2,8 @@
 
 namespace Mesd\FilterBundle\Model;
 
+use Doctrine\ORM\QueryBuilder;
+
 use Mesd\FilterBundle\Exception\MisappliedFilterException;
 use Mesd\FilterBundle\Exception\MissingFilterException;
 
@@ -9,14 +11,12 @@ class FilterManager
 {
 
     private $securityContext;
-    private $objectManager;
     private $bypassRoles;
     private $config;
 
-    public function __construct($securityContext, $objectManager)
+    public function __construct($securityContext)
     {
         $this->securityContext = $securityContext;
-        $this->objectManager   = $objectManager->getManager();
     }
 
     public function setBypassRoles($bypassRoles)
@@ -43,7 +43,7 @@ class FilterManager
         return $this->config;
     }
     
-    public function applyFilters($queryBuilder, $filtersToApply)
+    public function applyFilters(QueryBuilder $queryBuilder, $filtersToApply)
     {
         $user = $this->securityContext->getToken()->getUser();
         foreach ($this->bypassRoles as $bypassRole) {
@@ -84,12 +84,11 @@ class FilterManager
         return $filtersByCategory;
     }
     
-    protected function applySortedFilters($queryBuilder, $filtersByCategory)
+    protected function applySortedFilters(QueryBuilder $queryBuilder, $filtersByCategory)
     {
         $rootAlias = $queryBuilder->getRootAlias();
         $rootNamespaces = $queryBuilder->getRootEntities();
         $with = $this->getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias);
-        $entityNames = array();
         foreach ($filtersByCategory as $categoryString => $filters) {
             $category = $filters[0]->getFilterEntity();
             $mainAlias = $rootAlias;
@@ -104,7 +103,6 @@ class FilterManager
             foreach ($associations as $association) {
                 $explodedTrail = explode('->', $association->getTrail());
                 $alias = $mainAlias;
-                $lastAlias = $explodedTrail[count($explodedTrail) - 1];
                 foreach ($explodedTrail as $nextAlias) {
                     if ('id' === $nextAlias) {
                         $queryBuilder->andWhere($with['on'][$categoryString]);
@@ -141,7 +139,7 @@ class FilterManager
         return $queryBuilder;
     }
     
-    protected function getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias)
+    protected function getSortedFiltersWith(QueryBuilder $queryBuilder, $filtersByCategory, $rootAlias)
     {
         $with = array(
             'inner' => array(),
