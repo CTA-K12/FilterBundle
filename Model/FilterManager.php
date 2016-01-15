@@ -62,7 +62,7 @@ class FilterManager
             throw new MissingFilterException($expected . ' filters expected but got ' . $actual);
         }
 
-        $queryBuilder = $this->applySortedFilters(QueryBuilder $queryBuilder, $filtersByCategory);
+        $queryBuilder = $this->applySortedFilters($queryBuilder, $filtersByCategory);
 
         return $queryBuilder;
     }
