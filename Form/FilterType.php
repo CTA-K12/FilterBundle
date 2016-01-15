@@ -5,7 +5,6 @@ namespace Mesd\FilterBundle\Form;
 use Doctrine\ORM\EntityRepository;
 
 use Mesd\FilterBundle\Form\Factory\FilterCodeToRowTransformerFactory;
-use Mesd\FilterBundle\Form\Transformer\FilterCodeToRowTransformer;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;

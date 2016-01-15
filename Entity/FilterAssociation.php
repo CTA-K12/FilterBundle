@@ -2,8 +2,6 @@
 
 namespace Mesd\FilterBundle\Entity;
 
-use Doctrine\ORM\Mapping as ORM;
-
 /**
  * FilterAssociation
  */
