@@ -9,14 +9,12 @@ class FilterManager
 {
 
     private $securityContext;
-    private $objectManager;
     private $bypassRoles;
     private $config;
 
-    public function __construct($securityContext, $objectManager)
+    public function __construct($securityContext)
     {
         $this->securityContext = $securityContext;
-        $this->objectManager   = $objectManager->getManager();
     }
 
     public function setBypassRoles($bypassRoles)
@@ -89,7 +87,6 @@ class FilterManager
         $rootAlias = $queryBuilder->getRootAlias();
         $rootNamespaces = $queryBuilder->getRootEntities();
         $with = $this->getSortedFiltersWith($queryBuilder, $filtersByCategory, $rootAlias);
-        $entityNames = array();
         foreach ($filtersByCategory as $categoryString => $filters) {
             $category = $filters[0]->getFilterEntity();
             $mainAlias = $rootAlias;
@@ -104,7 +101,6 @@ class FilterManager
             foreach ($associations as $association) {
                 $explodedTrail = explode('->', $association->getTrail());
                 $alias = $mainAlias;
-                $lastAlias = $explodedTrail[count($explodedTrail) - 1];
                 foreach ($explodedTrail as $nextAlias) {
                     if ('id' === $nextAlias) {
                         $queryBuilder->andWhere($with['on'][$categoryString]);

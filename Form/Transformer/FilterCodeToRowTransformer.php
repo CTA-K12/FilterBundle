@@ -91,7 +91,6 @@ class FilterCodeToRowTransformer implements DataTransformerInterface
                 }
                 foreach ($cells as $cell) {
                     if (-1 < $cell->solvent[0]) {
-                        $existingCells = $filterRow->getFilterCell();
                         sort($cell->solvent);
                         $result = $this->entityManager
                             ->getRepository('MesdFilterBundle:FilterCell')
