@@ -12,7 +12,7 @@ services:
 
 
     mesd_filter.type.filter:
-        class: Mesd\FilterBundle\Form\FilterType
+        class: Mesd\FilterBundle\Form\Type\FilterType
         arguments: ["@mesd_filter.filter_code_to_row_transformer_factory"]
         tags:
           - { name: form.type, alias: mesd_filterbundle_filter }
