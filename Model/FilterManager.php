@@ -99,6 +99,7 @@ class FilterManager
             }
             $categoryId = $category->getId();
             $associations = $category->getFilterAssociation();
+            $alreadyJoined = array();
             foreach ($associations as $association) {
                 $explodedTrail = explode('->', $association->getTrail());
                 $alias = $mainAlias;
@@ -107,13 +108,17 @@ class FilterManager
                         $queryBuilder->andWhere($with['on'][$categoryString]);
                     } else {
                         $newAlias = $nextAlias . $categoryId;
-                        if (array_key_exists($newAlias, $with['inner'])) {
+                        if (
+                            array_key_exists($newAlias, $with['inner'])
+                            && !array_key_exists($newAlias, $alreadyJoined)
+                        ) {
                             $queryBuilder->leftJoin(
                                 $alias . '.' . $nextAlias,
                                 $newAlias
                             );
-                            $alias = $newAlias;
+                            $alreadyJoined[$newAlias] = $newAlias;
                         }
+                        $alias = $newAlias;
                     }
                 }
             }
