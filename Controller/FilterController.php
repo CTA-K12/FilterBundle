@@ -176,7 +176,7 @@ class FilterController extends Controller
             $entity->updateDescription();
             $entityManager->flush();
 
-            return $this->redirect($this->generateUrl('filter_edit', array('id' => $id)));
+            return $this->redirect($this->generateUrl('filter_show', array('id' => $id)));
         }
 
         return $this->render('MesdFilterBundle:Filter:edit.html.twig', array(
